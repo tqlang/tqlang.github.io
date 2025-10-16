@@ -8,25 +8,35 @@ until some condition is reached. Bellow are the loop types that abstract support
 
 ---
 ## While loops
-:::not-implemented
-:::
 
 While loops are the most basic loop types. It while it conditional is valid or
 the code reaches a breakpoint.
 
-This is the structure of a while syntax:
+These are the possibilities for the while statement syntax:
 ```abs
-while <condition> => <instruction>
+while <condition> do <instruction>
+while <condition> : <step> do <instruction>
+while <declaration> : <condition> : <step> do <instruction>
 ```
+`declaration` - Context variables that will be accessible inside the loop
+`condition` - The boolean value that will be tested before each iteration. The loop will continue running while this is true
+`step` - A process to be executed after each loop iteration
+`instruction` - what the loop should do every iteration
 
-While loops do not have iterators, so in this cse we must create our own:
-```abs
-let index = 10
-while index > 0 => {
-	Std.Console.log("Hello, Scopped World!")
-	index -= 2
+While loops are the most common way to do repetitive tasks in Abstract. it behave both like while and for loops in
+the majority of other languages.
+
+```c title="In C"
+for (var i = 0; i < 5; i++) {
+	puts("Hello, Scopped World!")
 }
-Std.Console.writeln(index)
+puts("Loop break")
+```
+```abs title="In Abstract"
+while let i = 0 : index < 5 : i++ do {
+	Std.Console.log("Hello, Scopped World!")
+}
+Std.Console.log("Loop break")
 ```
 ```text title="Console Output"
 Hello, Scopped World!
@@ -34,14 +44,13 @@ Hello, Scopped World!
 Hello, Scopped World!
 Hello, Scopped World!
 Hello, Scopped World!
-0
+Loop break
 ```
 
-Using a `break` statement, it is possible to stop the loop before it has reached
-it condition:
+Using a `break` statement, it is possible to stop the loop before its condition fails:
 ```abs
 let index = 10
-while index >= 0 => {
+while index >= 0 do {
 	Std.Console.log("Hello, Scopped World!")
 	index -= 2
 
@@ -62,7 +71,7 @@ after each iteration:
 ```abs
 # Parenthesis are optional, but helps to read!
 let index = 0
-while (index < 10) : (index++) => Std.Console.log("Hello, World!")
+while (index < 10) : (index++) do Std.Console.log("Hello, World!")
 ```
 
 ---
@@ -76,14 +85,14 @@ while (index < 10) : (index++) => Std.Console.log("Hello, World!")
 from Std.Console import
 
 # Looping from 0 to 49
-for i in ..50 => writeln(i)
+for i in ..50 do writeln(i)
 
 # Looping from 0 to 50 in steps of 10
-for i in ..50:10 => writeln(i)
+for i in ..50:10 do writeln(i)
 
 # Looping though each element of a array
 let []byte numbers = [22, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
-for v in numbers => {
+for v in numbers do {
 	write("Example of a prime number:")
 	writeln(v)
 }

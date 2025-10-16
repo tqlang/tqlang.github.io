@@ -16,11 +16,11 @@ have full controll of the layout of all the bits stored on it.
 Packets can be implemented as structs, using the `@packed` attribute as following:
 ```abs
 @packed(8) struct MyDinner {
-	bool hasFork
-	bool hasSpoon
-	bool hasKnife
-	bool hasPlate
-	u4 hungerLevel
+	@public let bool hasFork
+	@public let bool hasSpoon
+	@public let bool hasKnife
+	@public let bool hasPlate
+	@public let u4 hungerLevel
 }
 ```
 

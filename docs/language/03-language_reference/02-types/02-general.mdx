@@ -8,16 +8,14 @@ numerical values or create type encapsulation.
 
 ---
 ## Booleans
-:::not-implemented
-:::
 
 Booleans are types that can only represent the binary values `true` or `false`.
 These two values are extremely important to handle conditionals or hold simple
 states without messing the values.
 
-| Alias | Size            | Implementation         |
-|-------|:---------------:|:----------------------:|
-| bool  | 1-bit           | [Std.Types.Boolean](#) |
+| Alias | Size            |
+|-------|:---------------:|
+| bool  | 1-bit           |
 
 ```abs
 let bool cake = false
@@ -31,17 +29,15 @@ The cake is a lie!
 
 ---
 ## Strings
-:::not-implemented
-:::
 
 A string is a data structure that is able to store text data. A string can be
 used to store and reproduce text characters easily. \
 In Abstract, every string is encoded in UTF-8, with characters varying from 1-4
 bytes in length.
 
-| Alias  | Size                                            | Implementation         |
-|--------|:-----------------------------------------------:|:----------------------:|
-| string | variable (content is heap/statically-allocated) | [Std.Types.String](#)  |
+| Alias  | Size                                            |
+|--------|:-----------------------------------------------:|
+| string | variable (content is heap/statically-allocated) |
 
 
 ```abs
