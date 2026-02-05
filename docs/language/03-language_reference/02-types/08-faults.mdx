@@ -19,7 +19,7 @@ where a certain subroutine identified a problem in the execution. It can store
 data about where the error happened, what happened and aditional data do debug
 the error as the programmer needs.
 
-```abs
+```tq
 func tryToDoSomething() !void { ... }
 func tryToReturnSomething() !u32 { ... }
 ```
@@ -37,7 +37,7 @@ the desired value.
 To make sure that the fault will not be a problem to the process, abstract will not allow
 a failable function to be invoked as usually:
 
-```abs
+```tq
 # Try to invoke the function this way will result in a compilation error!
 tryToDoSomething()
 let u32 foo = tryToReturnSomething()
@@ -52,7 +52,7 @@ Pay attention that the ignored result will return a nullable value that will
 be null in case of an error, so if you have sure about the sucess of the
 operation, you can also unwrap the nullable value:
 
-```abs
+```tq
 # This will invoke the function, allowing it to abort without changing the
 # current process state.
 tryToDoSomething()!
@@ -67,7 +67,7 @@ let ?u32 bar = tryToReturnSomething().ignored()  # not unwrapped
 If the error cannnot be just ignored and need a specific process branching to
 handle it, the fault wrapper provide the `.onCatch()` call and the `catch` operator:
 
-```abs
+```tq
 # If the invoke get aborted, the catch block will be executed before
 # the execution continue
 tryToDoSomething() catch(fault err)
@@ -94,7 +94,7 @@ be handled by the caller, it's possible to use the `try` operator.
 See that using the `try` operator will also make the function abort in case
 of an error.
 
-```abs
+```tq
 # If `tryToDoSomething` return a error, the function will abort and
 # the fault will be raised to the caller
 try tryToDoSomething()
@@ -113,7 +113,7 @@ the function need to be typed with the Fault Wrapper `Std.Types.Fault(type T)`.
 To make life easier, the compiler allows a type to be automatically weapped by
 using tha bang character (`!`) before the desired to wrap type:
 
-```abs
+```tq
 func foo() !void        # A failable function that returns nothing
 func foo() !i32         # A failable function that returns na integer
 func foo() !f32         # A failable function that returns a floating
@@ -123,7 +123,7 @@ func foo() ![]string    # A failable function that returns an array of strings
 
 Inside this function, we create a condition to verify the error as follows:
 
-```abs
+```tq
 func safeDivide(f32 numerator, f32 denominator) !f32 {
 	if (denominator == 0) {} # Raise a fault here!
 	return numerator / denominator
@@ -141,7 +141,7 @@ writing them aways in pascal case (`PascalCase`) and aways
 finish the name aways with `Fault`.
 :::
 
-```abs
+```tq
 func safeDivide(f32 numerator, f32 denominator) !f32 {
 	if (denominator == 0) {
 		# Use the `new` operator to create a

@@ -9,7 +9,7 @@ title: Static
 :::not-implemented
 :::
 
-```abs
+```tq
 namespace Std.Types.Static
 ```
 

@@ -1,4 +1,4 @@
-Prism.languages.abs = {
+Prism.languages.pseudo = {
 	'comment': {
 		pattern: /#(?!##).*|###[\s\S]*?###/,
 		greedy: true

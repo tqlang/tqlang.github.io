@@ -5,7 +5,7 @@
 :::not-implemented
 :::
 
-```abs
+```tq
 namespace Std
 ```
 

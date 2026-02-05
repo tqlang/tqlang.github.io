@@ -1,16 +1,21 @@
-import {themes as prismThemes} from 'prism-react-renderer';
+import {PrismTheme, themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const blank_theme: PrismTheme = {
+  plain: {},
+  styles: [],
+};
+
 const config: Config = {
-  title: 'Abstract Programming Language',
+  title: 'tq Programming Language',
   favicon: 'img/favicon.ico',
 
-  url: 'https://abstractlang.github.io/',
+  url: 'https://tqlang.github.io/',
   baseUrl: '/',
 
-  organizationName: 'abstractLang',
-  projectName: 'Abstract',
+  organizationName: 'tqlang',
+  projectName: 'tq',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
@@ -28,7 +33,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
-          editUrl: 'https://github.com/abstractLang/abstractLang.github.io/tree/main/',
+          editUrl: 'https://github.com/tqlang/tqlang.github.io/tree/main/',
           admonitions: {
             keywords: [
               'under-construction',
@@ -44,7 +49,7 @@ const config: Config = {
             xslt: true,
           },
 
-          editUrl: 'https://github.com/abstractLang/abstractLang.github.io',
+          editUrl: 'https://github.com/tqlang/tqlang.github.io',
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
@@ -59,10 +64,9 @@ const config: Config = {
   themeConfig: {
     image: 'img/social-card.jpg',
     navbar: {
-      title: 'Abstract',
       logo: {
-        alt: 'Abstract',
-        src: 'img/logo.png',
+        alt: 'home',
+        src: 'img/logo.svg',
       },
       items: [
         {
@@ -73,7 +77,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/abstractLang/Abstract',
+          href: 'https://github.com/tqlang/tq-compiler',
           label: 'GitHub',
           position: 'right',
         },
@@ -83,13 +87,14 @@ const config: Config = {
       style: 'dark',
       links: [
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Abstract Programming Language. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} tq Programming Language. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.gruvboxMaterialLight,
-      darkTheme: prismThemes.dracula,
+      theme: blank_theme,
+      darkTheme: blank_theme,
     },
   } satisfies Preset.ThemeConfig,
 };
 
 export default config;
+

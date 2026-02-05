@@ -21,7 +21,8 @@ sequence of data in the memory that can be indexed by its position on the list.
 
 
 In abstract, array types are delcared as follows:
-```
+```tq
+#/// execution scope ///
 []anytype
 ```
 `[]` being a type modifier, indicating an array list of the following type
@@ -40,13 +41,15 @@ mentioned between the array type modifier `[length]`, also ensuring that the arr
 will aways be of the explicited size. \
 e.g. the following code will create an array for the `i32` type with pre-allocated memory to only 5 elements of
 the `i32` type:
-```abs
+```tq
+#/// execution scope ///
 let [5]i32 myArray
 ```
 
 Sometimes it is more convenient to just assign the elements to an array without counting how many elements it has.
 In that case, the Abstract compiler can figure out the length on its own. Hence, the following syntax is also valid:
-```abs
+```tq
+#/// execution scope ///
 # pay attention to the empty type modifier!
 let []i8 myArray = [values..]
 ```
@@ -54,16 +57,18 @@ let []i8 myArray = [values..]
 If the developer want to specify an array length but define only some of the elements, then
 both the syntaxes can be mixed, using some special syntax features to specify the indexes where
 the elements will be aplyed:
-```abs
+```tq
+#/// execution scope ///
 [..5, 10, 20, 30] # 10, 20 & 30 will be placed starting at the index 5
 [10, 20, 30, 3..] # 10, 20 & 30 will be placed 3 elements before the end of the array
 [10, 20, ..8, 30] # 10 & 20 will be placed at the start and 30 will be placed at index 8
 ```
 
 Some ways of declaring an array in Abstract are:
-```abs
+```tq
+#/// execution scope ///
 let [10]i32 myArray
-const []string fruits = ["orange", "mango", "strawberry", "tomato"]
+const fruits = ["orange", "mango", "strawberry", "tomato"]
 const [20]i8 myBytes = [255, 254, 253 ..]
 ```
 
@@ -74,7 +79,8 @@ The index operator is declared putting a number surrounded by square brackets af
 The declared number is the index, the position of the desired element on the list, starting from zero.
 
 The index operator will return an element from the array, at the specified index, as follows:
-```abs
+```tq
+#/// execution scope ///
 let []i32 myArray = [10, 20, 30, 40, 50]
 let i32 elementAt1 = myArray[1] # = 20
 let i32 elementAt2 = myArray[2] # = 30
@@ -97,7 +103,7 @@ Dynamic arrays are wrappers around built-in arrays that allow them to be resized
 during runtime. Dynamic arrays will require an allocator to work as they lies
 entirelly on the heap.
 
-```abs
+```tq
 from Std.Console import
 from Std.Types.Collections import { DynamicArray }
 
@@ -115,7 +121,7 @@ func main() !void {
     # Elements can also be removed from the list
     byteList.removeAt(2)
 
-    for i in byteList => writeln(i)
+    for i in byteList do writeln(i)
 }
 ```
 ```text title="Console Output"

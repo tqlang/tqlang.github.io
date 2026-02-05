@@ -17,8 +17,9 @@ states without messing the values.
 |-------|:---------------:|
 | bool  | 1-bit           |
 
-```abs
-let bool cake = false
+```tq
+#/// execution scope ///
+let cake = false
 
 if (cake) Std.Console.writeln("Yummy!")
 else Std.Console.writeln("The cake is a lie!")
@@ -40,7 +41,8 @@ bytes in length.
 | string | variable (content is heap/statically-allocated) |
 
 
-```abs
+```tq
+#/// execution scope ///
 let string mySpeek = "Hello, World!"
 Std.Console.writeln(mySpeek)
 
@@ -79,7 +81,8 @@ and castable to any integer.
 
 to declarate a Char data type, use `char`:
 
-```abs
+```tq
+#/// execution scope ///
 const string myString = "Hello, World!"
 
 let char myChar = 'U'
@@ -95,19 +98,21 @@ Std.Console.writeln(myChar as byte) # '87'
 
 Ranges are types with a special syntax and are used widelly though the language.
 They can be representd as:
-```abs
+```plain
 <start>..<finish>:<step>
 ```
 And some values can be implicited, like:
-```abs
-.. 10        # from 0 to 10
-.. 10 :  8   # from 0 to 10, in steps of 8
-5 ..         # from 5 to undefined limit
-5 .. :  14   # from 0 to undefined limit, in steps of 14
+```tq
+#/// execution scope ///
+..10     # from 0 to 10
+..10:8   # from 0 to 10, in steps of 8
+5..      # from 5 to undefined limit
+5..:14   # from 0 to undefined limit, in steps of 14
 ```
 
 To iterate though a range, get a instance of the range iterator:
-```abs
+```tq
+#/// execution scope ///
 from Std.Console import
 
 const myRange = 0..20 : 2
@@ -123,7 +128,8 @@ while (iterator.reachEnd()) : (i = iterator.next()) {
 ## Void
 
 Void is not a concrete type and it is used to indicate that a value is not returned.
-```abs
+```tq
+#/// execution scope ///
 void
 ```
 
@@ -132,7 +138,8 @@ void
 :::not-implemented
 :::
 
-NoReturn is not a concrete type and it is used to indicate that a function do not returns.
-```abs
+NoReturn is an abstract type that is used to indicate that a function do not returns.
+```tq
+#/// execution scope ///
 noreturn
 ```

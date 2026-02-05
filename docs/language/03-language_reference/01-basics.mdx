@@ -2,7 +2,7 @@
 
 ## Whitespace
 
-In abstract, padding can be done with spaces (` `) or tabs (`\t`).
+In tq, padding can be done with spaces (` `) or tabs (`\t`).
 However, we want to ensure a standard pattern of use tabs instead of
 spaces as the use of the tab character is aways better for cases of
 acessibility, slightly reduction in source code size and user size preference.
@@ -18,9 +18,10 @@ Inside a procedure, every statement should be executed one after another in the
 specified order. To ensire this order is important to know where a statement
 beggins and ends.
 
-In abstract, every line inside a procedure is interpreted as a sinlge statement.
+In tq, every line inside a procedure is interpreted as a sinlge statement.
 e.g.:
-```abs
+```tq
+#/// execution scope ///
 Std.Console.writeln("First statement")
 Std.Console.writeln("Second statement")
 ```
@@ -30,18 +31,21 @@ However, expressions are allowed to not follow the same logic. If done right, ex
 can be used to break a line without break the logic. Binary operators are a example. When
 a line breaks before or after it, the compiler will ignore this break. e.g.:
 
-```abs
+```tq
+#/// execution scope ///
 Std.Console.writeln("This string"
 	+ " is being used to break this line!")
 
 # Is interpreted as
+#/// execution scope ///
 Std.Console.writeln("This string" + " is being used to break this line!")
 ```
 
 Is also possible to write two expressions in the same line using a semicolon (`;`) character.
 It will emulate a line break when interpreted. e.g:
 
-```abs
+```tq
+#/// execution scope ///
 write("Hello, "); write("World!"); write("\n")
 ```
 
@@ -57,7 +61,8 @@ lines or blocks of code.
 
 The `#` character can be used to declare the section of a line on its right
 as a comment.
-```abs
+```tq
+#/// execution scope ///
 # I am a comment!
 IAm.executeable() # Me too!
 ```
@@ -66,7 +71,8 @@ IAm.executeable() # Me too!
 
 Enclose a section or chunk of lines with `###` to declare it as a multi-lined
 comment.
-```abs
+```tq
+#/// execution scope ///
 IAm.executeable()
 ###
 	I am a comment!

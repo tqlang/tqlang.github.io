@@ -11,7 +11,7 @@ export default function prismIncludeLanguages(PrismObject) {
     require(`prismjs/components/prism-${lang}`);
   });
 
-  require("./prism-aditional-langs/abs.js");
+  require("./prism-aditional-langs/pseudo.js");
 
   delete globalThis.Prism;
 }

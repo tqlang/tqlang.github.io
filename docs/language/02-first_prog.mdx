@@ -7,7 +7,7 @@ title: Your First Program
 :::
 
 
-This document will help you how to set up Abstract's tools in your
+This document will help you how to set up tq tools in your
 machine as well as how to create, organize and execute your first
 program.
 
@@ -29,23 +29,23 @@ cd MyProgram
 ## Writing the program
 
 Inside the `MyProgram` folder, create a script file with the
-`.a` extension e.g., `main.a`.
+`.tq` extension e.g., `main.tq`.
 
 Inside the script file, write the following code:
-```abs title="main.a"
+```tq title="main.tq"
 from Std.Console import
 
 func main() !void {
 	writeln("Hello, World!")
-	writeln("I'm coding in abstract!")
+	writeln("I'm coding in tq!")
 }
 ```
 
 ---
 ## Running the Program
 
-Abstract offers two ways to build and run the program: Using the
-command line to directly call the compiler or use a build script
+The language offers two ways to build and run the program: Using
+thecommand line to directly call the compiler or use a build script
 to talk to the compiler for you.
 
 ### Building with the command line
@@ -54,21 +54,21 @@ Using the command line, you can invoke the following command to run the
 project in the current workspace:
 
 ```shell title="Command Line"
-abs build run
+tqc build run
 ```
 
 ### Running With a Build Automatization Script
 
-To use a build automatization script, create a new script with the `.a`
-that should be called `build.a`.
+To use a build automatization script, create a new script that should
+be called `build.tq`.
 
-This is a example of a standard for the file and directory organization
+This is an example of a standard for the file and directory organization
 for using build automatization scripts:
 
 ```text title="MyProgram/"
 src/
- '- main.a   
-build.a
+ '- main.tq
+build.tq
 ```
 
 the creation of this istructure can be automatized though the command:

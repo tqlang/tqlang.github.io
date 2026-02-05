@@ -16,19 +16,21 @@ Structures are the way of how you can declarate a new data type in the Abstract 
 of primitives, privatize certain variables in closed scopes, abstract the management of huge amonts of data, and go on.
 
 A example of a structure being declarated and used in Abstract is:
-```abs
+```tq
 struct Biography {
 	@public let u8 myAge
 	@public let string myName
 	@public let string myGithub
 }
 
-# this is creating a new variable of type Biography!
-let Biography myBio = new Biography();
+func ... {
+	# this is creating a new variable of type Biography!
+	let Biography myBio = new Biography();
 
-myBio.myAge = 17
-myBio.myName = "Camila"
-myBio.myGithub = "lumi2021"
+	myBio.myAge = 17
+	myBio.myName = "Camila"
+	myBio.myGithub = "lumi2021"
+}
 ```
 
 The structure `Biography` on the example have 3 fields, an integer `myAge` and two strings `myName` and `myGithub`.
@@ -43,7 +45,7 @@ to know the type of the structure anywhere during runtime.
 
 Sometimes, is usefull to have a single function to abstract complex initialization of data.
 for instance, take the following structure declaration example:
-```abs
+```tq
 struct Biography {
 	@public let string name
 	@public let string github
@@ -54,7 +56,8 @@ struct Biography {
 ```
 
 To initialize this structure, the following code:
-```abs
+```tq
+#/// execution scope ///
 # Declarating the variable and creating the instance...
 let Biography myBio = new Biography();
 # Defining the initial data ...
@@ -65,9 +68,9 @@ myBio.birthYear = 07
 ```
 
 Or use the inline constructor to do it:
-```abs
+```tq
 # Declarating the variable, creating the instance
-# and efining the initial data ...
+# and defining the initial data ...
 let Biography myBio = new Biography() {
 	myBio.name = "Camila"
 	myBio.github = "lumi2021"
@@ -82,7 +85,7 @@ when the structure is initialized, called constructor. The constructor can accep
 variables and run code as any function can do.
 
 A constructor can be declarated as follows:
-```abs
+```tq
 struct Biography {
 	# ...
 	constructor() {
@@ -92,7 +95,7 @@ struct Biography {
 ```
 
 As it need some input data, the constructor will ask for some arguments:
-```abs
+```tq
 struct Biography {
 	# ...
 	constructor(string name, string gh, u8 age) {
@@ -108,7 +111,7 @@ declarated constructors (it includes empty constructors).
 
 
 after that, we can process the data how we want:
-```abs
+```tq
 struct Biography {
 	# ...
 	constructor(string name, string gh, string age) {
@@ -125,27 +128,13 @@ struct Biography {
 
 As default, the constructor will handle the stack allocation of the data being initialized. Sometimes, however,
 it is necessary to have control of this step manually in case of initializing data in the heap or something
-more specific. The defualt way of doing this is with a standard static function:
-
-```abs
-struct Biography {
-	@public @static _new(string name, string gh, string age) {
-		this.name = name
-		github = gh
-		this.age = age
-		birthday = 24 - age
-	}
-}
-
-let myBio = Biography._new("Camila", "lumi2021", 17)
-```
-
-Or you can use the `@raw(T)` attribute to declarate a specific return type for the constructor:
-```abs
+more specific. To allow so, it's possible to declare the `static constructor` that allows the definition of a
+explicit return type:
+```tq
 from Std.Memory import
 
 struct Biography {
-	@raw(*Biography) constructor(string name, string gh, string age) {
+	@static constructor(string name, string gh, string age) *Biography {
 		let newBio = alloc(Biography)
 
 		newBio.name = name

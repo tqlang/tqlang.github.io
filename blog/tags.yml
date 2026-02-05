@@ -6,7 +6,7 @@ devlog:
 news:
   label: News
   permalink: /news
-  description: News about abstract language development
+  description: News about tq language development
 
 announcements:
   label: Announcements
@@ -26,4 +26,4 @@ patch-notes:
 dev-test:
   label: Website Development
   permalink: /dev-test
-  description: nothing important, will be removed soon!
+  description: Nothing important, will be removed soon!

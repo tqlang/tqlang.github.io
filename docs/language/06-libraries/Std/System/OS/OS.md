@@ -10,7 +10,7 @@ title: OS
 :::
 
 
-```abs
+```tq
 namespace Std.System.OS
 ```
 

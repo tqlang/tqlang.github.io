@@ -10,7 +10,7 @@ with custom rules and behavior.
 ## Declarting Typedefs
 
 To declarate a typedef, you can do:
-```abs
+```tq
 typedef MyCustomType {
     # Here you can define value
     # entries and functions
@@ -19,7 +19,7 @@ typedef MyCustomType {
 
 To declarate the typedef with a specific undercovered type, use the following:
 
-```abs
+```tq
 typedef(MyType) MyCustomType {
     # Here you can define value
     # entries and functions
@@ -37,32 +37,32 @@ There are two kinds of entries that can fit in a typedef: numericals and named e
 Is important to notice that both entries kinds can be used for any type, although they
 must be defined slightly diferent when using integer types or not.
 
-```
+```tq
 typedef MyCustomType {
-    1, 2, 3, 4, 5,
-    10, 15, 20, 25, 30
+    case 1, 2, 3, 4, 5
+    case 10, 15, 20, 25, 30
 }
 ```
 
 Numeric entries can also be defined using the range notation:
 
-```abs
+```tq
 typedef MyCustomType {
-    1..5,
-    10..30:5
+    case 1..5
+    case 10..30:5
 }
 ```
 
 To define named entries, just write it name following the identifiers convention:
 
-```abs
+```tq
 typedef MyCustomType {
-    1..5,
-    10..30:5,
+    case 1..5
+    case 10..30:5
 
-    NamedValue1,
-    NamedValue2,
-    NamedValue3
+    case NamedValue1
+    case NamedValue2
+    case NamedValue3
 }
 ```
 
@@ -71,29 +71,29 @@ typedef MyCustomType {
 After define entries inside the typedef, you will be ble to use them as literal values.
 
 When using numeric values, you can just use a number literal included in the typedef:
-```abs
+```tq
 let MyCustomType = 5
 ```
 Using a number that is not included in the typedef will result in a compilation error.
 
 When using literal values, you need to first referenceate the typedef or use the dot
 notation to automatically identify the typedef type, if possible:
-```abs
-leet MyCustomType mytype1 = MyCustomType.NamedValue1
-leet MyCustomType mytype2 = .NamedValue2
+```tq
+let MyCustomType mytype1 = MyCustomType.NamedValue1
+let MyCustomType mytype2 = .NamedValue2
 ```
 
 Take this typedef implementation as a example:
 
-```abs
+```tq
 typedef Food {
-    hamburger,
-    vegan_burger,
-    x_burger,
-    salad,
-    orange_juice,
-    chocolate_milk,
-    cola
+    case hamburger
+    case vegan_burger
+    case x_burger
+    case salad
+    case orange_juice
+    case chocolate_milk
+    case cola
 }
 
 # This function receives a  string and
@@ -102,20 +102,18 @@ typedef Food {
 # recognized.
 func doOrder(string order) !void {
 
-    let Food foodValue = switch (order.trim()) {
-        "hamburger" => .hamburger,
-        "vegan burger" => .vegan_burger,
-        "x burger" => .x_burger,
-        "salad" =>  .salad,
-        "orange juice" => .orange_juice,
-        "chocolate milk" or
-        "choco milk" => .chocolate_milkk,
-        "cola" => .cola,
+    let foodValue = match (order.trim()) {
+        case "hamburger" => .hamburger
+        case "vegan burger" => .vegan_burger
+        case "x burger" => .x_burger
+        case "salad" =>  .salad
+        case "orange juice" => .orange_juice
+        case "chocolate milk"
+        or   "choco milk" => .chocolate_milk
+        case "cola" => .cola
 
-        _ => throw falt.UnrecognizedInput()
+        case _ => throw falt.UnrecognizedInput()
     }
 
 }
 ```
-
-

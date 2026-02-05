@@ -16,7 +16,7 @@ a variety of security features to prevent errors when acessing null values.
 
 Abstract allows to declarate nullable types wrapping them with the nullable generic type.
 This wrapping can be made putting the interrogation (`?`) character right before the desired type.
-```abs
+```tq
 ?i32
 ?string
 ?*List
@@ -30,7 +30,7 @@ The language also provides some features to make the life using nullable types e
 ### Getting the data
 
 The nullable wrapper will not allow you to access the data directly.
-```abs
+```tq
 func ?i32 foo() { ... }
 
 # This is a compilation error!
@@ -43,7 +43,7 @@ Checking if the value is not null or ignoring the possibility of a null value.
 you can easily check the existence of the value using a conditional statement
 and use the unrapped value in the condition scope as follows:
 
-```abs
+```tq
 func ?i32 foo() { ... }
 
 let ?i32 myNumber = foo()
@@ -60,7 +60,7 @@ let i32 value = myNumber
 
 Or ignore the check and manually unrap the condition using the `.unwrap()` call
 or the `?` operator:
-```abs
+```tq
 func ?i32 foo() { ... }
 
 let i32 myNumber = foo()?
@@ -73,7 +73,7 @@ let i32 myNumber = foo().unwrap()
 If you have a default value to use in case of null, you can use the `??` operator to
 try to unwrap the expression and use the next expression if it's null:
 
-```abs
+```tq
 func ?i32 foo() { ... }
 
 let i32 value = foo() ?? 0

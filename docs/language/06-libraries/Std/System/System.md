@@ -10,7 +10,7 @@ title: System
 :::
 
 
-```abs
+```tq
 namespace Std.System
 ```
 
@@ -39,7 +39,7 @@ namespace Std.System
 
 ## Enums
 
-```abs
+```tq
 @public enum Archtecture {
     x86,
     x86_64,
@@ -48,7 +48,7 @@ namespace Std.System
 }
 ```
 
-```abs
+```tq
 @public enum HostSystem {
     windows,
     linux,

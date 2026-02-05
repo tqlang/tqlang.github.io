@@ -23,7 +23,7 @@ it can be used to define complex structures, non-numerical data, lists, referenc
 and alike.
 
 An example on the use of types:
-```abs
+```tq
 from Std.Console import
 
 # The function main will ask for a list of strings

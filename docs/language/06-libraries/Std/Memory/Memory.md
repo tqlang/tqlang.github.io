@@ -10,7 +10,7 @@ title: Memory
 :::
 
 
-```abs
+```tq
 namespace Std.Memory
 ```
 

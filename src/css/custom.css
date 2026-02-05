@@ -25,7 +25,6 @@
   
 }
 
-
 [data-theme='dark'] {
   --ifm-color-primary: #79c0ff;
   --ifm-color-primary-dark: #58a6ff;
@@ -45,24 +44,77 @@
 
   --orange-warning-shade-0: hsl(20, 100%, 40%);
   --orange-warning-shade-1: hsl(20, 100%, 25%);
+
+  --prism-background-color: #282A36;
+  --prism-color: #F8F8F2;
 }
 
-/* custom token styles */
-.token.type {
+.theme-code-block {
+  tab-size: 4;
+}
+
+.theme-code-block .token.error {
+  text-decoration: underline;
+  text-decoration-color: red;
+}
+
+.theme-code-block .token.comment {
+  color: #6272A4;
+}
+
+.theme-code-block .token.inline-hint {
+  background-color: #00000055;
+  border: 1px solid gray;
+  padding: 0 0.5em 0 0.5em;
+  border-radius: 5px;
+  opacity: 50%;
+  user-select: none;
+}
+
+.theme-code-block .token.keyword {
+  color: #FF79C6;
+}
+
+.theme-code-block .token.attribute {
+  color: #8BE9FD;
+}
+
+.theme-code-block .token.type {
+  color: #8BE9FD;
   font-style: italic;
 }
-.token.attibute {
+
+.theme-code-block .token.function {
+  color: #50FA7B;
+}
+
+.theme-code-block .token.number {
+  color: #BD93F9;
+}
+
+.theme-code-block .token.string {
+  color: #F1FA8C;
+}
+
+.theme-code-block .token.boolean {
+  color: #BD93F9;
   font-style: italic;
 }
 
-.token.string.interpolation.plain {
-  color: white;
+.theme-code-block .token.operator {
+  color: #FF79C6;
 }
 
-
-.bytecode-bitfields > thead { width: 100% !important; }
-.bytecode-bitfields > tbody { width: 100% !important; }
-
-.bytecode-bitfields > tbody > tr { border: var(--ifm-table-border-width) solid var(--ifm-table-border-color); }
-.bytecode-bitfields > tbody > tr > td:not(:nth-last-child(1)):not(:nth-last-child(2)) { border: none; }
-.bytecode-bitfields > tbody > tr > td.rb { border-right: var(--ifm-table-border-width) solid var(--ifm-table-border-color) !important; }
+.theme-code-block .theme-admonition {
+  font: var(--ifm-font-size-base) / var(--ifm-line-height-base) var(--ifm-font-family-base);
+  margin: 0;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin-top: 1em;
+  border-radius: 0;
+  background: #ff555540;
+  border: none;
+}
+.theme-code-block .theme-admonition > div {
+  margin: 0;
+}

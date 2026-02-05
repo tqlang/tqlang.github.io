@@ -9,7 +9,7 @@ title: Compilation
 :::not-implemented
 :::
 
-```abs
+```tq
 namespace Std.Compilation
 ```
 

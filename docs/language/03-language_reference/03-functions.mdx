@@ -12,29 +12,38 @@ This block can easily be called by other functions in any moment or order.
 ---
 ## Declaring and Invoking
 
-A example of function declaration and call in abstract is
-```abs
-func foo() void {
-	Std.Console.writeln("foo called!")
+A example of function declaration and call in tq is
+```tq
+# Declaring a function called `foo`
+func foo() {
+	Std.Console.writeln("Hello, World!")
 }
 
-foo()
+func main() !void {
+	Std.Console.writeln("foo will be invoked now...")
+	# Invoking our foo function 
+	foo()
+	Std.Console.writeln("foo finished!")
+}
 ```
 ```text title="Console Output"
-foo called!
+foo will be invoked now...
+Hello, World!
+foo finished!
 ```
 
 the syntax for declarate a function is:
-```abs
-func <name>(...) <type> { ... }
+```pseudo
+func <name>(...) <optional type> { ... }
 ```
 
 where `<name>` is the identifier for reffer to the function and
-`<type>` is the type that the function returns.
+`<optional type>` is the type that the function returns, ornothing for void.
 
 A function can be invoked by it reference followed by a opening and closing parenthesis `()` as follows:
-```abs
-FunctionReference()
+```tq
+#/// execution scope ///
+myFunctionReference()
 ```
 
 ---
@@ -47,36 +56,36 @@ on how it is needed.
 During the function declaration, parameters can be included as *typed identifiers* to identify their
 type and allow them to be refered inside the function block.
 
-```abs
+```tq
 # the function `foo` will ask for 2 arguments to be invoked.
 # - The first can be a value of any type that will be refered as `any`.
 # - The seccond is a 32 bit integer that will be refered as `number`.
-func void foo(anytype any, i32 number) { ... }
+func foo(anytype any, i32 number) void { ... }
 ```
 
 
 If the function ask for arguments, the values should be declarated, in order, inside the parenthesis
-```abs
+```tq
 @public func foo(i32 a, i8 b, i128 c) void { ... }
 
-const i32 myInt = 100
-const myByte = 255
-const i128 myLonger = 2 ** 100
+func ... {
+	const i32 myInt = 100
+	const myByte = 255
+	const i128 myLonger = 2 ** 100
 
-# correct call!
-foo(myInt, myByte, myLonger) 
+	# correct call!
+	foo(myInt, myByte, myLonger) 
 
-# /!\ Compilation error!
-# There's no function 'foo' with this parameter type order!
-###
-foo(myByte, myInt, myLonger)
-###
+	### /!\ Compilation Error!
+		There's no function 'foo' with this parameter type order!
+	###
+	foo(myByte, myInt, myLonger)
 
-# /!\ Compilation error!
-# There's no function 'foo' that accepts only a byte!
-###
-foo(myByte)
-###
+	### /!\ Compilation Error!
+		There's no function 'foo' that accepts only a byte!
+	###
+	foo(myByte)
+}
 ```
 
 ---
@@ -86,39 +95,38 @@ Two or more functions can have the same identifier if they have different types.
 When a function is declarated with the same name, but with a diferent tipe, it's called overload.
 
 :::info[Good Practice]
-The Abstract Language emphasizes the language readability and understanding over abstraction.
+The tq Language emphasizes the language readability and understanding over abstraction.
 As a good practice, make sure to only use function overloading when the result will be the same
-for the same equivalent values. In some cases could be a good practice overload a function to ommit
-a repetitive or optional value.
+for the same equivalent values.
 
 <details>
 <summary>Examples</summary>
 
-```abs title="Good Practice"
+```tq title="Good Practice"
 # Different results are named diferently
 
-func writeText(string value) void {
+func writeText(string value) {
 	Std.Console.writeln("My string is: " + value)
 }
-func writeText([]char value) void {
+func writeText([]char value) {
 	Std.Console.writeln("My string is: " + string.join(value))
 }
-func writeNumber(i32 value) void {
+func writeNumber(i32 value) {
 	Std.Console.writeln("My number is: " + value)
 }
 ```
 
-```abs title="Bad Practice"
+```tq title="Bad Practice"
 # Different results with the same name can result in a
 # harder understanding of the code
 
-func writeText(string value) void {
+func writeText(string value) {
 	Std.Console.writeln("My string is:" + value)
 }
-func writeText([]char value) void {
+func writeText([]char value) {
 	Std.Console.writeln("My string is:" + string.join(value))
 }
-func writeText(i32 value) void {
+func writeText(i32 value) {
 	Std.Console.writeln("My number is:" + value)
 }
 ```

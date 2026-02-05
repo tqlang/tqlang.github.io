@@ -10,7 +10,7 @@ title: Assembly
 :::
 
 
-```abs
+```tq
 namespace Std.Assembly
 ```
 

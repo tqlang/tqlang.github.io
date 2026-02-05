@@ -24,7 +24,7 @@ where a method starts, ends or a data is sent in or out a function, it can under
 where these data is being used and where it is being discarted.
 
 let's take the following code as an example:
-```abs
+```tq
 func main() !void {
     const message1 = "Hello, World!"
     sayMessage(message1)
@@ -42,7 +42,7 @@ func sayMessage(string msg) {
 With a fast analysis, is not hard to understand when a data reference becomes
 inaccessible:
 
-```abs
+```tq
 func main() !void {
 	const message1 = "Hello, World!"
 	sayMessage(message1)
@@ -64,7 +64,7 @@ func sayMessage(string msg) {
 Also it is possible to go more further and identify when a reference is no
 more used or it value has changed:
 
-```abs
+```tq
 func main() !void {
 	const message1 = "Hello, World!"
 	sayMessage(message1)
@@ -92,7 +92,7 @@ the best practice is aways request the data destruction
 to make sure that any heap-allocated data from it is
 well deallocated:
 
-```abs
+```tq
 func main() !void {
 	const message1 = "Hello, World!"
 	sayMessage(message1)
@@ -129,7 +129,7 @@ The language included a feature called The Static Garbage Collector, a garbage
 collector that acts in compile time and is developed to carefully 8nspect, select
 and delete references when their lifetime ends. Take the following example:
 
-```abs
+```tq
 func main() !void {
 	const message1 = "Hello, World!"
 	sayMessage(message1)
@@ -152,7 +152,7 @@ Even without any destructor calls, this code can finely be compiled and executed
 without any leaks, thanks to the static GC.
 
 
-```abs title="Static GC post-processed code
+```tq title="Static GC post-processed code
 func main() !void {
 	const message1 = "Hello, World!"
 	sayMessage(message1)
@@ -187,7 +187,7 @@ To disable the garbage collecting analysis and consequently, the implicit `delet
 statements, use the `Std.GC` namespace to manuually control the garbage collector's
 behavior:
 
-```abs
+```tq
 from MyProgram import { MyHeapObject }
 from std import { GC }
 

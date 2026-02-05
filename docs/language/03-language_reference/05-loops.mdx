@@ -4,7 +4,7 @@
 
 Complex programs aways needs to do repetitive or infinite tasks. Because of it,
 loops must be used. Loops are structures used to repeat a selected code section
-until some condition is reached. Bellow are the loop types that abstract supports:
+until some condition is reached. Bellow are the loop types that the language supports:
 
 ---
 ## While loops
@@ -13,7 +13,7 @@ While loops are the most basic loop types. It while it conditional is valid or
 the code reaches a breakpoint.
 
 These are the possibilities for the while statement syntax:
-```abs
+```tq
 while <condition> do <instruction>
 while <condition> : <step> do <instruction>
 while <declaration> : <condition> : <step> do <instruction>
@@ -23,17 +23,18 @@ while <declaration> : <condition> : <step> do <instruction>
 `step` - A process to be executed after each loop iteration
 `instruction` - what the loop should do every iteration
 
-While loops are the most common way to do repetitive tasks in Abstract. it behave both like while and for loops in
+While loops are the most common way to do repetitive tasks in tq. it behave both like while and for loops in
 the majority of other languages.
 
 ```c title="In C"
-for (var i = 0; i < 5; i++) {
+for (int i = 0; i < 5; i++) {
 	puts("Hello, Scopped World!")
 }
 puts("Loop break")
 ```
-```abs title="In Abstract"
-while let i = 0 : index < 5 : i++ do {
+```tq-exp title="In tq"
+#/// execution scope ///
+while i = 0 : index < 5 : i++ do {
 	Std.Console.log("Hello, Scopped World!")
 }
 Std.Console.log("Loop break")
@@ -48,7 +49,8 @@ Loop break
 ```
 
 Using a `break` statement, it is possible to stop the loop before its condition fails:
-```abs
+```tq
+#/// execution scope ///
 let index = 10
 while index >= 0 do {
 	Std.Console.log("Hello, Scopped World!")
@@ -68,8 +70,9 @@ Hello, Scopped World!
 Using `:` is also possible to define an extra step for the loop to do
 after each iteration:
 
-```abs
-# Parenthesis are optional, but helps to read!
+```tq
+#/// execution scope ///
+# Parenthesis are optional, but may helps to read!
 let index = 0
 while (index < 10) : (index++) do Std.Console.log("Hello, World!")
 ```
@@ -81,19 +84,21 @@ while (index < 10) : (index++) do Std.Console.log("Hello, World!")
 
 // TODO
 
-```abs
+```tq
 from Std.Console import
 
-# Looping from 0 to 49
-for i in ..50 do writeln(i)
+func ... {
+	# Looping from 0 to 49
+	for i in ..50 do writeln(i)
 
-# Looping from 0 to 50 in steps of 10
-for i in ..50:10 do writeln(i)
+	# Looping from 0 to 50 in steps of 10
+	for i in ..50:10 do writeln(i)
 
-# Looping though each element of a array
-let []byte numbers = [22, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
-for v in numbers do {
-	write("Example of a prime number:")
-	writeln(v)
+	# Looping though each element of a array
+	let []byte numbers = [22, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]
+	for v in numbers do {
+		write("Example of a prime number:")
+		writeln(v)
+	}
 }
 ```

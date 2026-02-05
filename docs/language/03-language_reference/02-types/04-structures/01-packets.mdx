@@ -14,7 +14,7 @@ have full controll of the layout of all the bits stored on it.
 ## Implementation and Usage
 
 Packets can be implemented as structs, using the `@packed` attribute as following:
-```abs
+```tq
 @packed(8) struct MyDinner {
 	@public let bool hasFork
 	@public let bool hasSpoon
@@ -29,8 +29,8 @@ The parameter is, however, optional and will be automatically calculated if not 
 Inside the packet, you can include primitives and other structures.
 
 Packets are used at the same way as structures:
-```abs
-let MyDinner dinner = MyDinner {
+```tq
+let MyDinner dinner = new MyDinner() {
 	hasFork = true
 	hasSpoon = true
 	hasKnife = true
@@ -42,16 +42,17 @@ A constructor can also be implemented to make the
 process easy.
 
 and you can use the dot operator (`.`) to acess it fields:
-```abs
-import from Std.Console
+```tq
+from Std.Console import
+func ... {
+	if (!dinner.hasFork)  writeln("Comrade doesn't have a fork!")
+	if (!dinner.hasSpoon) writeln("Comrade doesn't have a spoon!")
+	if (!dinner.hasKnife) writeln("Comrade doesn't have a knife!")
+	if (!dinner.hasPlate) writeln("Comrade doesn't have a plate!")
 
-if (!dinner.hasFork)  writeln("Comrade doesn't have a fork!")
-if (!dinner.hasSpoon) writeln("Comrade doesn't have a spoon!")
-if (!dinner.hasKnife) writeln("Comrade doesn't have a knife!")
-if (!dinner.hasPlate) writeln("Comrade doesn't have a plate!")
-
-if   (!dinner.hungerLevel > 10) writeln("They're starving!!!!")
-elif (!dinner.hungerLevel > 5)  writeln("They're hungry!")
+	if   (!dinner.hungerLevel > 10) writeln("They're starving!!!!")
+	elif (!dinner.hungerLevel > 5)  writeln("They're hungry!")
+}
 ```
 
 ```text title="Console Output"
@@ -80,7 +81,9 @@ As instance, let's suppose we have the following structure layout for a page of 
 As the data follows a structure with specific defined fields, plus there are some
 values that are not 8-bit alligned, packets should be used to represent this table.
 A representation of this table should be:
-```abs
+```tq
+typedef(u32) Tag { ... }
+
 ### The range, in bits, are:
 	- tag:      0 .. 32
 	- active:   32
@@ -88,27 +91,31 @@ A representation of this table should be:
 	- name:     80 .. 120
 	- index:    120 .. 256
 ###
-@public @packed struct TablePage {
-	@lay(..32)  Tag tag
-	            bool active                     # alignment of 1-bits
-	@off(80)
-	            StringBuffer(5) name            # alignment of 8-bits * 5
-	            u16 index                       # alignment of 16-bits
+@packed struct TablePage {
+	@lay(..32) 							# Define field inside range 0x0 and 0x4
+	let Tag tag
+	let bool active                     # alignment of 1-bits
+	
+	@off(80)							# Define field ofset at 0x0A
+	let StringBuffer(5) name            # alignment of 8-bits * 5
+	let u16 index                       # alignment of 16-bits
 }
 ```
 
 It is also possible to use bytes instead of bits with the range expression's step value.
-Bothe `@lay` and `@pad` attributes will use the step value as a multiplier.
+Both `@lay` and `@pad` attributes will use the step value as a multiplier.
 e.g.:
 
-```abs
+```tq
 # No need to count the bits, as we are using bytes!
 
 @public @packed struct TablePage {
-	@lay(..4:8)     Tag tag
-	                bool active                     # alignment of 1-bits
-	@off(10 * 8)
-	                StringBuffer(5) name            # alignment of 8-bits * 5
-	                u16 index                       # alignment of 16-bits
+	@lay(..4:8)							# Define field inside range 0x0 and 0x4
+	let Tag tag
+	let bool active                     # alignment of 1-bits
+
+	@off(10 * 8)						# Define field ofset at 0x0A
+	let StringBuffer(5) name            # alignment of 8-bits * 5
+	let u16 index                       # alignment of 16-bits
 }
 ```

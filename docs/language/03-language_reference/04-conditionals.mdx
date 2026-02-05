@@ -5,8 +5,7 @@
 
 Conditionals are a important aspect of a program, allowing it to do specific behaviors with specific inputs.
 
-Abstract have 3 main kinds of conditional checking: `if`, `elif` and `else`, match and
-switch statements.
+The language have 4 main kinds of conditional checking: `if`, `elif` and `else` statements and `match` expressions.
 
 ---
 ## if, elif and else blocks
@@ -22,11 +21,13 @@ a `Boolean` type.
 If false, the code will jump the next declarated statement and continue the process in the seccond statement
 after the condition.
 
-```abs
-let bool sayHello = false
+```tq
+#/// execution scope ///
+let sayHello = false
 
 if sayHello
 	Std.Console.writeln("Hello, World!")
+
 # This statement is outside the condition!
 Std.Console.writeln("Goodbie, World!")
 ```
@@ -34,16 +35,17 @@ Std.Console.writeln("Goodbie, World!")
 Goodbie, World!
 ```
 
-If a `elif` statement is declarated after a `if` or another `elif`, the condition
-will be verified only if the conditions above are evaluated as false.
+When an `elif` statement is declarated after a `if` or `elif`, the condition will be
+verified only if the conditions above are evaluated as false.
 
-If a `else` statement is declarated after a `if` or `elif`, the statement will be
+When an `else` statement is declarated after a `if` or `elif`, the statement will be
 executed only when all the above conditions are evaluated as false.
 
 As the condition chain is evaluated from top to bottom, sometimes is possible to
 end up with unreachable conditions.
 
-```abs
+```tq
+#/// execution scope ///
 let i32 value = 10
 
 # First condition evaluated.
@@ -68,11 +70,11 @@ elif value >= 10
 elif value > 11
 	Std.Console.writeln("Value is greater than 11!")
 
-# A new if keyword will start a new cascade
+# A new if keyword will start a new conditional cascade
 if value == 11
 	Std.Console.writeln("Value is exactly 11!")
 
-# If all conditions in the cascade evaluate to false
+# If all conditions in the cascade evaluate to false,
 # the else statement will aways be processed
 else
 	Std.Console.writeln("Value is not 11")
@@ -82,10 +84,9 @@ else
 if more than a statement needs to be executed in case of a condition, it's possible to
 open a conde block with brackets (`{ ... }`).
 
-```abs
-let i32 value
-
-#...
+```tq
+#/// execution scope ///
+let i32 value = ...
 
 if (value > 30) Std.Console.writeln("Value is greater than 30!")
 elif (value < 30) Std.Console.writeln("Value is lesser than 30!")
@@ -106,82 +107,67 @@ else {
 
 A easier way to do collections of if - elif's
 
-It can only check equality \
-It cannot fall though other cases
+It can check diferent conditions \
+It can fall though other cases ONLY IF DECLARED AS A STATEMENT
 
 It can run statements or return values \
-Each case have it own scope
+Each case have it's own scope
 
-```abs
-let i32 value
-
-# ...
+```tq
+#/// execution scope ///
+let i32 value = ...
 
 match value {
-	 10 => Std.Console.writeln("value is 10!"),
-	 20 => Std.Console.writeln("value is 20!"),
-	 30 => Std.Console.writeln("value is 30!"),
+	case 10     => Std.Console.writeln("value is 10!")
+	case 20     => Std.Console.writeln("value is 20!")
+	case > 30   => Std.Console.writeln("value is greater than 30!")
 
-	 _ => Std.Console.writeln("Value is neither 10, 20 or 30!")
+	default => Std.Console.writeln("Value is neither 10 or 20, but is less or equal to 30!")
 }
 
 # Match blocks can return values too!
 let i32 by2 = match value {
-	10 => 5,
-	20 => 10,
-	30 => 15,
-	40 => 20,
+	case 10 => 5
+	case 20 => 10
+	case 30 => 15
+	case 40 => 20
 
-	_ => value / 2
+	default => value / 2
 }
-
 ```
 
----
-## Switch
-:::not-implemented
-:::
+When used as statements, `match` expressions can implement the behavior of
+fall-though, where a case automatically continues it execution in the one
+right bellow it. to enable this behavior, add the keyword `and` right before
+the desired case to fall:
 
-Most complex way of controll of process flow \
-switches manipulates groups of cases and conditions
-
-Switches allows any condition evaluation \
-Switches allows to fall though cases, allowing to
-continue executing if a minimum condition is achived.
-
-```abs
-let i32 lifePoints = 7
-let i32 manaPoints = 3
-
-# Switchs will fall though bellow cases when the
-# arow operator is after the case statement!
-
-Std.Console.write("life points: ")
-switch lifePoints {
-	default => Std.Console.write("\{lifePoints}+") =>
-	case 10 => Std.Console.write("<3") =>
-	case 9  => Std.Console.write("<3") =>
-	case 8  => Std.Console.write("<3") =>
-	case 7  => Std.Console.write("<3") =>
-	case 6  => Std.Console.write("<3") =>
-	case 5  => Std.Console.write("<3") =>
-	case 4  => Std.Console.write("<3") =>
-	case 3  => Std.Console.write("<3") =>
-	case 2  => Std.Console.write("<3") =>
-	case 1  => Std.Console.write("<3")
+```tq
+typedef Privilege {
+	case notAllowed
+	case basic
+	case moderator
+	case admin
 }
-Std.Console.writeln()
 
-# Without the arow operator, the process will not
-# fall through the next case and the switch will
-# break!
+func ... {
+	let Privilege permissionLevel = ...
+	let canSee = false
+	let canWrite = false
+	let canArchive = false
 
-switch manaPoints {
-	case > 10 => Std.Console.write("{manaPoints}+") =>
-	case < 10 and > 0 => Std.Console.writeln(manaPoints + " - mana points") # breaks here!
+	match permissionLevel {
+		default => {
+			Std.Console.writeln("Permission denied!")
+			Std.Process.exit(1)
+		}
 
-	case 0 => Std.Console.writeln("No mana!")
+		case .admin     => canArchive = true; continue
+		case .moderator => canWrite = true; continue
+		case .basic     => csnSee = true;
+	}
+	Std.Console.writeln()
 }
+
 
 ```
 
