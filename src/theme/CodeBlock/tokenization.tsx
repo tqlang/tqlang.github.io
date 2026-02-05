@@ -301,11 +301,14 @@ function analyze(tokens: Token[]) {
     };
 
     if (tokens[0].kind == TokenKind.comment) {
-        switch (tokens[0].value) {
+        let wipeToken = true;
+        switch (tokens[0].value.trim()) {
             case "#/// root scope ///": ctx.scope[0] = CodeBlockScope.root; break;
             case "#/// func scope ///": ctx.scope[0] = CodeBlockScope.function; break;
             case "#/// struct scope ///": ctx.scope[0] = CodeBlockScope.struct; break;
+            default: wipeToken = false; break;
         }
+        if (wipeToken) tokens.splice(0, 2);
     }
 
     try {
