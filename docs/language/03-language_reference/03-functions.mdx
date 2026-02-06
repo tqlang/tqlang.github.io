@@ -34,7 +34,7 @@ foo finished!
 
 the syntax for declarate a function is:
 ```pseudo
-func <name>(...) <optional type> { ... }
+func <name>(<argument type> <argument name>, <...>) <optional type> { <code to execute> }
 ```
 
 where `<name>` is the identifier for reffer to the function and
@@ -42,7 +42,7 @@ where `<name>` is the identifier for reffer to the function and
 
 A function can be invoked by it reference followed by a opening and closing parenthesis `()` as follows:
 ```tq
-#/// execution scope ///
+#/// func scope ///
 myFunctionReference()
 ```
 
@@ -95,7 +95,7 @@ Two or more functions can have the same identifier if they have different types.
 When a function is declarated with the same name, but with a diferent tipe, it's called overload.
 
 :::info[Good Practice]
-The tq Language emphasizes the language readability and understanding over abstraction.
+The tq Language emphasizes code readability and understanding over abstraction.
 As a good practice, make sure to only use function overloading when the result will be the same
 for the same equivalent values.
 

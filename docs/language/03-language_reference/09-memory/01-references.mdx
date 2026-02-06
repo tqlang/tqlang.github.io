@@ -31,17 +31,17 @@ const copy1 = source
 const copy2 = source
 
 func ... {
-    writeln("original source = \{source}")
-    writeln("original copy1 = \{copy1}")
-    writeln("original copy2 = \{copy2}")
+	writeln("original source = \{source}")
+	writeln("original copy1 = \{copy1}")
+	writeln("original copy2 = \{copy2}")
 
-    # Modifying...
-    copy2 = 20
-    copy1 = 5
+	# Modifying...
+	copy2 = 20
+	copy1 = 5
 
-    writeln("source = \{source}")
-    writeln("copy1 = \{copy1}")
-    writeln("copy2 = \{copy2}")
+	writeln("source = \{source}")
+	writeln("copy1 = \{copy1}")
+	writeln("copy2 = \{copy2}")
 }
 ```
 ```text title="Console Output"
@@ -81,19 +81,19 @@ const ref1 = &source
 const ref2 = &source
 
 func ... {
-    writeln("original source = \{source}")
-    writeln("original copy1 = \{copy1}")
-    writeln("original ref1 = \{ref1}")
-    writeln("original ref2 = \{ref2}")
+	writeln("original source = \{source}")
+	writeln("original copy1 = \{copy1}")
+	writeln("original ref1 = \{ref1}")
+	writeln("original ref2 = \{ref2}")
 
-    # Modifying...
-    ref1 = 5
-    ref2 = 7
+	# Modifying...
+	ref1 = 5
+	ref2 = 7
 
-    writeln("source = \{source}")
-    writeln("copy1 = \{copy1}")
-    writeln("ref1 = \{ref1}")
-    writeln("ref2 = \{ref2}")
+	writeln("source = \{source}")
+	writeln("copy1 = \{copy1}")
+	writeln("ref1 = \{ref1}")
+	writeln("ref2 = \{ref2}")
 }
 ```
 ```text title="Console Output"

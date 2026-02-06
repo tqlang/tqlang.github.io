@@ -13,7 +13,7 @@ While loops are the most basic loop types. It while it conditional is valid or
 the code reaches a breakpoint.
 
 These are the possibilities for the while statement syntax:
-```tq
+```pseudo
 while <condition> do <instruction>
 while <condition> : <step> do <instruction>
 while <declaration> : <condition> : <step> do <instruction>
@@ -32,8 +32,8 @@ for (int i = 0; i < 5; i++) {
 }
 puts("Loop break")
 ```
-```tq-exp title="In tq"
-#/// execution scope ///
+```tq title="In tq"
+#/// func scope ///
 while i = 0 : index < 5 : i++ do {
 	Std.Console.log("Hello, Scopped World!")
 }
@@ -50,7 +50,7 @@ Loop break
 
 Using a `break` statement, it is possible to stop the loop before its condition fails:
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let index = 10
 while index >= 0 do {
 	Std.Console.log("Hello, Scopped World!")
@@ -71,7 +71,7 @@ Using `:` is also possible to define an extra step for the loop to do
 after each iteration:
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 # Parenthesis are optional, but may helps to read!
 let index = 0
 while (index < 10) : (index++) do Std.Console.log("Hello, World!")

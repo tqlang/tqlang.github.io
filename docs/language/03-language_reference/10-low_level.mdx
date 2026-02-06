@@ -77,20 +77,19 @@ func foo() {
 from Std.Console import
 from Std.System.Assembly import { assemblyContext }
 
-func say_message(string message) {
+func foo() {
 
+	let string message = "Hello, World!"
+
+	# Writing to STDOUT in x86 linux
 	assemblyContext()
 
-	# This code makes a system call in a linux environment.
-	# This code is also targeted to x86 machines.
-
-	.MOV(.eax, 4) # sys_write
-	.MOV(.ebx, 1) # stdout
-	.MOV(.ecx, message)
-	.MOV(.edx, message.length)
-	.INT(0x80)
+	.MOV(.eax, 1)           # syscall = write
+	.MOV(.rdi, 1)           # descriptor = stdout
+	.MOV(.rsi, &message)    # message reference (internally solved to pointer)
+	.MOV(.rdx, message.len) # message length
+	.SYSCALL()
 
 	.execute()
-
 }
 ```

@@ -18,7 +18,7 @@ states without messing the values.
 | bool  | 1-bit           |
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let cake = false
 
 if (cake) Std.Console.writeln("Yummy!")
@@ -42,7 +42,7 @@ bytes in length.
 
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let string mySpeek = "Hello, World!"
 Std.Console.writeln(mySpeek)
 
@@ -82,7 +82,7 @@ and castable to any integer.
 to declarate a Char data type, use `char`:
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 const string myString = "Hello, World!"
 
 let char myChar = 'U'
@@ -103,7 +103,7 @@ They can be representd as:
 ```
 And some values can be implicited, like:
 ```tq
-#/// execution scope ///
+#/// func scope ///
 ..10     # from 0 to 10
 ..10:8   # from 0 to 10, in steps of 8
 5..      # from 5 to undefined limit
@@ -112,7 +112,7 @@ And some values can be implicited, like:
 
 To iterate though a range, get a instance of the range iterator:
 ```tq
-#/// execution scope ///
+#/// func scope ///
 from Std.Console import
 
 const myRange = 0..20 : 2
@@ -129,7 +129,7 @@ while (iterator.reachEnd()) : (i = iterator.next()) {
 
 Void is not a concrete type and it is used to indicate that a value is not returned.
 ```tq
-#/// execution scope ///
+#/// func scope ///
 void
 ```
 
@@ -140,6 +140,6 @@ void
 
 NoReturn is an abstract type that is used to indicate that a function do not returns.
 ```tq
-#/// execution scope ///
+#/// func scope ///
 noreturn
 ```

@@ -22,7 +22,7 @@ If false, the code will jump the next declarated statement and continue the proc
 after the condition.
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let sayHello = false
 
 if sayHello
@@ -45,7 +45,7 @@ As the condition chain is evaluated from top to bottom, sometimes is possible to
 end up with unreachable conditions.
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let i32 value = 10
 
 # First condition evaluated.
@@ -85,7 +85,7 @@ if more than a statement needs to be executed in case of a condition, it's possi
 open a conde block with brackets (`{ ... }`).
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let i32 value = ...
 
 if (value > 30) Std.Console.writeln("Value is greater than 30!")
@@ -105,16 +105,13 @@ else {
 :::not-implemented
 :::
 
-A easier way to do collections of if - elif's
-
-It can check diferent conditions \
-It can fall though other cases ONLY IF DECLARED AS A STATEMENT
-
-It can run statements or return values \
-Each case have it's own scope
+Value match expressions are great ways to simplify (and very often, optimize) long if-else blocks.
+A match expression will test a value against diferent values or conditions and conditionally execute
+the code of the matched option. If no valid option matches the provided value, it will fall into a
+default fallback option if provided.
 
 ```tq
-#/// execution scope ///
+#/// func scope ///
 let i32 value = ...
 
 match value {
@@ -136,10 +133,10 @@ let i32 by2 = match value {
 }
 ```
 
-When used as statements, `match` expressions can implement the behavior of
-fall-though, where a case automatically continues it execution in the one
-right bellow it. to enable this behavior, add the keyword `and` right before
-the desired case to fall:
+When used as statements and with, `match` expressions can implement the behavior of
+directily executing another case block, without testing it's condition.
+to enable this behavior, use the keyword `continue` with the block case condition
+right after it:
 
 ```tq
 typedef Privilege {
@@ -161,17 +158,14 @@ func ... {
 			Std.Process.exit(1)
 		}
 
-		case .admin     => canArchive = true; continue
-		case .moderator => canWrite = true; continue
-		case .basic     => csnSee = true;
+		case .admin     => canArchive = true; continue .moderator
+		case .moderator => canWrite = true; continue .basic
+		case .basic     => csnSee = true
 	}
-	Std.Console.writeln()
+	Std.Console.writeln("User is \{permissionLevel}")
+	Std.Console.writeln("Can See:     \{canSee}")
+	Std.Console.writeln("Can Write:   \{canWrite}")
+	Std.Console.writeln("Can Archive: \{canArchive}")
 }
 
-
-```
-
-```text title="Console Output"
-####### - life points
-3 - mana points
 ```

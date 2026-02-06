@@ -70,6 +70,13 @@
   opacity: 50%;
   user-select: none;
 }
+.theme-code-block .token.template {
+  background-color: #44475A;
+  padding: 0.1em 0.1em 0.1em 0.1em;
+  border-radius: 5px;
+  color: #F8F8F2;
+  font-weight: bolder;
+}
 
 .theme-code-block .token.keyword {
   color: #FF79C6;
@@ -105,16 +112,25 @@
   color: #FF79C6;
 }
 
-.theme-code-block .theme-admonition {
+.theme-code-block .token.green {
+  color: #50FA7B;
+}
+.theme-code-block .token.red {
+  color: #FF5555;
+}
+.theme-code-block .token.pink {
+  color: #FF79C6;
+}
+
+.theme-code-block .theme-admonition-danger {
   font: var(--ifm-font-size-base) / var(--ifm-line-height-base) var(--ifm-font-family-base);
   margin: 0;
   padding-top: 1em;
   padding-bottom: 1em;
-  margin-top: 1em;
   border-radius: 0;
   background: #ff555540;
   border: none;
 }
-.theme-code-block .theme-admonition > div {
+.theme-code-block .theme-admonition-danger > div {
   margin: 0;
 }

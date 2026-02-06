@@ -12,6 +12,7 @@ export default function prismIncludeLanguages(PrismObject) {
   });
 
   require("./prism-aditional-langs/pseudo.js");
+  require("./prism-aditional-langs/dir.js");
 
   delete globalThis.Prism;
 }

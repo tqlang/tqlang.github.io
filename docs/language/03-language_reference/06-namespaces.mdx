@@ -9,7 +9,7 @@ A namespace represents a logical group of individual identifiers, organized in a
 
 imagine the following namespace organization:
 
-```nasm
+```pseudo
 namespace Std {
     namespace Math {
         struct Graph
@@ -34,41 +34,41 @@ from Std.Math.Vector import { Point }
 
 ## Structuring Namespaced
 
-In Abstract, namespace generation is based entirely on directory structure.
+In tq, namespace generation is based entirely on directory structure.
 
 Every namespace is genersted based in a directury. Subdirectories generates neasted namespaces.
 
 Files are ignored and their content is put directly inside the parent namespace.
 
-The concept of this system is designed to allow maximum flexibility with namespace design and organization, also helping with organization and auto-documentation.
+The concept of this system is designed to allow maximum flexibility with namespace design and organization,
+also helping with organization and auto-documentation.
 
 Let's take the following project folder as a example:
-```
-MyProject/
+```dir
+MyProject:
   |-- Entities/
-  |     |-- PhysicsBody.a
-  |     '-- ColisionBox.a
+  |     |-- PhysicsBody.tq
+  |     '-- ColisionBox.tq
   |-- Envs/
-  |     |   
-  |     |-- Earth.a
-  |     |-- Mars.a
-  |     '-- Uranus.a
+  |     |-- Earth.tq
+  |     |-- Mars.tq
+  |     '-- Uranus.tq
   '-- Math/
-        |-- Physics.a
-        '-- Constants.a
-
+        |-- Physics.tq
+        '-- Constants.tq
 ```
 
 And knowing that:
 - All the following members are marked with the `@public` attribute;
-- `PhysicsBody.a`, `ColisionBox.a`, `Earth.a`, `Mars.a` and `Uranus.a` contais all empty structures that inherits the file name;
-- `Physics.a` contains the functions:
+- `PhysicsBody.tq`, `ColisionBox.tq`, `Earth.tq`, `Mars.tq` and `Uranus.tq` contais all
+empty structures that inherits the file name;
+- `Physics.tq` contains the functions:
     - `calculateSpeed(f64 time, f64 force) f64`
     - `calculateForce(f64 forceX, f64 forceY) f64`
-- `Constants.a` contains the constants:
+- `Constants.tq` contains the constants:
     - `const f64 earth_gravity = 9.80`
     - `const f64 mars_gravity = 3.73`
-    - `const f64 uranus_gravity = 8,87`
+    - `const f64 uranus_gravity = 8.87`
 
 And compiling the module named as `MyProject`,
 The compilation will generate the following global reference table for this module:
@@ -93,10 +93,12 @@ const   MyProject.Math.uranus_gravity
 
 ## Naming Limitations
 
-Some file systems, in special unix, allow you to use characters that cannot be used in an
+Some file systems, such as unix compliants, allow you to use characters that cannot be used in an
 identifier. These characters cannot be parsed into identifiers and consequently, cannot be
-parsed into namespaces.
+parsed into namespaces. If that's the case, the files and directories are ignored.
 
-The namespaces must match the following regular expression: `[a-zA-Z_][a-zA-Z_]`.
+By default, the tq build system uses the following regular expressions to search file system entries: \
+Directories: `[a-zA-Z_][a-zA-Z0-9_]` \
+Files:       `[a-zA-Z_][a-zA-Z0-9_].tq`
 
-// TODO
+

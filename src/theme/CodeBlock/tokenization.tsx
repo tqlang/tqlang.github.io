@@ -22,9 +22,11 @@ export enum TokenKind {
         comment,
         whitespace,
         newLine,
+
         assignOperator,
         binaryOperator,
         unaryOperator,
+        arrowOperator,
         punctuation,
 
         inlineHint,
@@ -67,10 +69,9 @@ function lex(text: string): Token[] {
         }
 
         // Line feed
-        if (ch == '\n') {
+        if (ch === '\n') {
             i++;
-            while (i < text.length && text[i] == '\n') i++;
-            tokens.push({ kind: TokenKind.newLine, start, end: i, value: text.slice(start, i), error: false });
+            tokens.push({ kind: TokenKind.newLine, start, end: i, value: text.slice(start, i), error: true });
             continue;
         }
 
@@ -233,9 +234,13 @@ function lex(text: string): Token[] {
 
             case '=':
                 i++;
-                if (['=', '>'].includes(text[i])) {
+                if (text[i] == '=') {
                     i++;
                     tokens.push({ kind: TokenKind.binaryOperator, start, end: i, value: text.slice(start, i), error: false });
+                }
+                else if (text[i] == '>') {
+                    i++;
+                    tokens.push({ kind: TokenKind.arrowOperator, start, end: i, value: text.slice(start, i), error: false });
                 }
                 else tokens.push({ kind: TokenKind.assignOperator, start, end: i, value: text.slice(start, i), error: false });
                 continue;
@@ -328,11 +333,12 @@ function analyze(tokens: Token[]) {
 }
 function analize_generic(ctx: AnalyzerContext) {
     ignore_whitespace_hard(ctx);
+
     switch (ctx.scope[ctx.scope.length-1]) {
 
+        case CodeBlockScope.root:
         case CodeBlockScope.struct:
-        case CodeBlockScope.typedef:
-        case CodeBlockScope.root: analyze_root(ctx); break;
+        case CodeBlockScope.typedef: analyze_root(ctx); break;
 
         case CodeBlockScope.function: analyze_expression(ctx); break;
 
@@ -367,6 +373,7 @@ function analyze_root(ctx: AnalyzerContext) {
                 case 'let': analyze_field(ctx); break;
                 case 'const': analyze_field(ctx); break;
                 case 'func': analyze_function(ctx); break;
+                case 'case': analyze_typedef_case(ctx); break;
                 case 'constructor': analyze_ctor_dtor(ctx); break;
                 case 'destructor': analyze_ctor_dtor(ctx); break;
                 case 'struct': analyze_struct(ctx); break;
@@ -388,6 +395,13 @@ function analyze_comment(ctx: AnalyzerContext) {
         const token = ctx.tokens[ctx.index];
 
         if (token.value.startsWith("### /!\\ Compilation Error!")) {
+
+            while (ctx.index-1 > 0 && ctx.tokens[ctx.index-1].kind != TokenKind.whitespace)
+                ctx.tokens.splice((ctx.index--) - 1, 1);
+
+            while (ctx.index-1 > 0 && ctx.tokens[ctx.index-1].kind != TokenKind.newLine)
+                ctx.tokens.splice((ctx.index--) - 1, 1);
+
             let value = ctx.tokens[ctx.index].value;
             let valueLines = value.split('\n');
 
@@ -456,7 +470,8 @@ function analyze_field(ctx: AnalyzerContext) {
     ignore_whitespace_soft(ctx);
 
     if (ctx.index+3 < ctx.tokens.length
-        && ctx.tokens[ctx.index].kind == TokenKind.word && isAnyWhitespace(ctx.tokens[ctx.index+1])
+        && ctx.tokens[ctx.index].kind == TokenKind.word
+        && isAnyWhitespace(ctx.tokens[ctx.index+1])
         && ctx.tokens[ctx.index+2].kind != TokenKind.word)
     {
         ctx.tokens[ctx.index++].kind = TokenKind.identifier;
@@ -480,7 +495,7 @@ function analyze_field(ctx: AnalyzerContext) {
     ctx.tokens[ctx.index++].kind = TokenKind.binaryOperator;
     ignore_whitespace_hard(ctx);
 
-    analyze_expression_tokens(ctx);
+    analyze_expression(ctx);
     ignore_whitespace_hard(ctx);
 }
 function analyze_function(ctx: AnalyzerContext) {
@@ -547,7 +562,17 @@ function analyze_typedef(ctx: AnalyzerContext) {
     ignore_whitespace_soft(ctx); 
 
     if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == '{')
-        analyze_delimited_scope(ctx, CodeBlockScope.struct);
+        analyze_delimited_scope(ctx, CodeBlockScope.typedef);
+}
+function analyze_typedef_case(ctx: AnalyzerContext) {
+    ctx.tokens[ctx.index++].kind = TokenKind.keyword;
+    while (ctx.index < ctx.tokens.length) {
+
+        ignore_whitespace_soft(ctx);
+        analyze_expression(ctx);
+
+        if (ctx.tokens[ctx.index].value != ',') break;
+    }
 }
 
 function analyze_delimited_scope(ctx: AnalyzerContext, scopeType: CodeBlockScope) {
@@ -560,7 +585,8 @@ function analyze_delimited_scope(ctx: AnalyzerContext, scopeType: CodeBlockScope
         analize_generic(ctx);
 
         if (ctx.index == lasti) {
-            console.error("Token pointer not incremented", ctx.tokens[ctx.index].value);
+            console.error(`Token pointer not incremented (${lasti} == ${ctx.index})\n`
+                + `token: '${ctx.tokens[ctx.index].value}' (${TokenKind[ctx.tokens[ctx.index].kind]})`);
             ctx.index++;
         }
     }
@@ -592,12 +618,8 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 analyze_expression(ctx);
                 ignore_whitespace_hard(ctx);
 
-                if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == '{') {
-                    console.log("test test")
+                if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == '{')
                     analyze_delimited_scope(ctx, CodeBlockScope.function);
-                    console.log("test test test")
-                }
-                console.log("bruh i hate it")
                 return;
             }
 
@@ -615,12 +637,14 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 case 'case':
                 case 'default':
                 case 'return':
+                case 'continue':
                     ctx.tokens[ctx.index++].kind = TokenKind.keyword;
                     return;
                 
                 case 'bool':
                 case 'byte':
                 case 'void':
+                case 'char':
                 case 'string':
                 case 'noreturn':
                     ctx.tokens[ctx.index++].kind = TokenKind.type;
@@ -632,7 +656,6 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                     return;
                     
                 case 'as':
-                case '=>':
                     ctx.tokens[ctx.index++].kind = TokenKind.binaryOperator;
                     return;
 
@@ -641,9 +664,8 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                     return;
 
             }
+            break;
 
-            ctx.index++; break;
-        
         case TokenKind.punctuation:
             switch (token.value) {
                 case '(':
@@ -655,35 +677,36 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                         ctx.tokens[ctx.index++].kind = TokenKind.punctuation;
                         return;
                     }
+                    break;
             }
-            ctx.index++; break;
-        
-        default: ctx.index++; break;
+            break;
     }
+
+    ctx.index++;
 }
 function analyze_expression(ctx: AnalyzerContext) {
     
-    while (true) {
-        console.log("a", ctx.tokens[ctx.index].value, TokenKind[ctx.tokens[ctx.index].kind]);
+    if (ctx.tokens[ctx.index].value == '{') {
+        analyze_delimited_scope(ctx, CodeBlockScope.function);
+        return;
+    }
 
+    while (true) {
         let i = ctx.index;
+        console.log(ctx.tokens[ctx.index].value);
         while (i < ctx.tokens.length && isValidInsideExpression(ctx.tokens[i])) i++;
         for (; ctx.index < i;) analyze_expression_tokens(ctx);
 
         ignore_whitespace_soft(ctx);
-        console.log("b", ctx.tokens[ctx.index].value, TokenKind[ctx.tokens[ctx.index].kind]);
         if (ctx.index < ctx.tokens.length
             && ctx.tokens[ctx.index].kind == TokenKind.binaryOperator
-            || ctx.tokens[ctx.index].kind == TokenKind.assignOperator) {
+            || ctx.tokens[ctx.index].kind == TokenKind.assignOperator
+            || ctx.tokens[ctx.index].value == ';') {
                 
                 ctx.index++;
                 ignore_whitespace_soft(ctx);
-                console.log("fuck", ctx.tokens[ctx.index].value, TokenKind[ctx.tokens[ctx.index].kind],
-                    ctx.tokens.slice(ctx.index).map(e => `${e.value} ${TokenKind[e.kind]}`));
                 continue;
-
         }
-        console.log("breaking...");
         break;
     }
 }
@@ -796,7 +819,7 @@ function isValidInsideExpression(t: Token): boolean {
     return !isAnyWhitespace(t) &&
     (t.kind != TokenKind.punctuation
         || t.value == '.'
-        || t.value == '('
-        || t.value == ')'
+        || t.value == '(' || t.value == ')'
+        || t.value == '[' || t.value == ']'
         || t.value == ':');
 }

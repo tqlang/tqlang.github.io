@@ -37,20 +37,40 @@ export default function CodeBlock({ children: rawChildren, ...props }: Props): R
 }
 
 
-
 function render(tokens: Token[], source: string) : ReactNode[] {
     const out: ReactNode[] = [];
+    let line: ReactNode[] = [];
     let last = 0;
+
+    console.log(tokens.map(e => [e.value, TokenKind[e.kind], e.error]));
 
     for (const t of tokens) {
 
         if (t.kind == TokenKind.metaError) {
-            out.push( <Admotion type="danger" title="Compilation Error"> {t.value} </Admotion> );
+            if (line.length > 0) {
+                out.push(<span key={out.length} className={'token-line'}>{line}</span>);
+                line = [];
+            }
+            out.push(
+                <span key={out.length} className={'token-info'}>
+                    <Admotion type="danger" title="Compilation Error">
+                        {t.value}
+                    </Admotion>
+                </span>
+            );
+        } 
+        else if (t.kind == TokenKind.newLine) {
+            line.push( <br key={line.length}></br> );
+            out.push( <span key={out.length} className={'token-line'}>{line}</span> );
+            line = [];
+        }
 
-        } else if (t.error == true) {
-            out.push( <span key={out.length} className={`token error ${TokenKind[t.kind]}`}>{t.wsp}{t.value}</span> );
+        else if (t.error == true) {
+            line.push( <span key={line.length} className={`token error ${TokenKind[t.kind]}`}>{t.wsp}{t.value}</span> );
 
-        } else {
+        }
+        
+        else {
             let tokenClass: string;
             switch (t.kind) {
                 case TokenKind.comment: tokenClass = "comment"; break;
@@ -69,16 +89,21 @@ function render(tokens: Token[], source: string) : ReactNode[] {
                 case TokenKind.unaryOperator: tokenClass = "operator unaryOperator"; break;
                 case TokenKind.binaryOperator: tokenClass = "operator binaryOperator"; break;
                 case TokenKind.assignOperator: tokenClass = "operator assignOperator"; break;
+                case TokenKind.arrowOperator: tokenClass = "operator arrowOperator"; break;
 
                 case TokenKind.inlineHint: tokenClass = "inline-hint"; break;
 
                 default: tokenClass = `plain ${TokenKind[t.kind]}`; break;
             }
 
-            out.push( <span key={out.length} className={`token ${tokenClass}`}>{t.wsp}{t.value}</span> );
+            line.push( <span key={line.length} className={`token ${tokenClass}`}>{t.wsp}{t.value}</span> );
         }
         
         last = t.end;
+    }
+    if (line.length > 0) {
+        out.push(<span key={out.length} className={'token-line'}>{line}</span>)
+        line = []
     }
 
     return out;

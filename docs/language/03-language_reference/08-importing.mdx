@@ -31,8 +31,8 @@ A example of simple import is:
 from Std.Console import
 ```
 
-Simple imports will allow the code to directly access references of
-the imported namespace is if inside it:
+Simple imports will allow the code to directly access members from
+the imported namespace inside it:
 
 ```tq
 from Std.Console import
@@ -68,7 +68,6 @@ e. g.:
 from Std import { Console, Memory }
 # `Console` and `Memory` is now directly referenceable
 
-
 func main() !void {
 	Console.writeln("Hello, World!")
 }
@@ -79,12 +78,17 @@ func main() !void {
 from Std.Console import { write }
 # only the `write` function is being imported
 
-
 func main() !void  {
 	write("Hello, World, ")
 	# Other references still need to be refered
 	# from the root!
 	Std.Console.writeln("I'm importing references!")
+
+	### /!\ Compilation Error!
+		`writeln` is not defined in the current namespace, neither is
+		being imported from `Std.Console!`
+	###
+	writeln("Oops")
 }
 ```
 
@@ -103,5 +107,11 @@ func main() !void {
 	# Instead of refering as `writeln`, the function is
 	# refered as `writeLine`!
 	writeLine("I'm importing references!")
+
+	### /!\ Compilation Error!
+		`writeln` is not defined in the current namespace, neither is
+		being imported from `Std.Console` as `writeln`!
+	###
+	writeln("Oops")
 }
 ```

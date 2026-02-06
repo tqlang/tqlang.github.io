@@ -57,7 +57,7 @@ struct Biography {
 
 To initialize this structure, the following code:
 ```tq
-#/// execution scope ///
+#/// func scope ///
 # Declarating the variable and creating the instance...
 let Biography myBio = new Biography();
 # Defining the initial data ...
