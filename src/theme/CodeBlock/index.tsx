@@ -4,8 +4,12 @@ import ElementContent from '@theme/CodeBlock/Content/Element';
 import StringContent from '@theme/CodeBlock/Content/String';
 import { Token, tokenize, TokenKind } from './tokenization';
 import type {Props} from '@theme/CodeBlock';
-import AdmonitionTypes from '../Admonition/Types';
-import Admotion from "@theme/Admonition";
+
+import IconDanger from '@theme/Admonition/Icon/Danger';
+import IconWarning from '@theme/Admonition/Icon/Warning';
+import IconInfo from '@theme/Admonition/Icon/Info';
+import IconNote from '@theme/Admonition/Icon/Note';
+import IconTip from '@theme/Admonition/Icon/Tip';
 
 function maybeStringifyChildren(children: ReactNode): ReactNode {
     if (React.Children.toArray(children).some((el) => isValidElement(el))) return children;
@@ -15,9 +19,8 @@ function maybeStringifyChildren(children: ReactNode): ReactNode {
 export default function CodeBlock({ children: rawChildren, ...props }: Props): ReactNode {
     const isBrowser = useIsBrowser();
     const children = maybeStringifyChildren(rawChildren);
-    const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent;
 
-    const isTq = typeof children === 'string' && props?.className?.includes('language-tq');
+    const isTq = typeof children === 'string' && props?.className?.endsWith('language-tq');
 
     if (isTq) {
         const source = children.trimEnd();
@@ -25,10 +28,13 @@ export default function CodeBlock({ children: rawChildren, ...props }: Props): R
         const inner = render(tokens, source);
 
         return (
-            <ElementContent key={String(isBrowser)} {...props}>{inner}</ElementContent>
+            <ElementContent key={String(isBrowser)} {...props}>
+                {inner}
+            </ElementContent>
         );
     }
 
+    const CodeBlockComp = typeof children === 'string' ? StringContent : ElementContent;
     return (
         <CodeBlockComp key={String(isBrowser)} {...props}>
             {children as string}
@@ -42,23 +48,26 @@ function render(tokens: Token[], source: string) : ReactNode[] {
     let line: ReactNode[] = [];
     let last = 0;
 
-    console.log(tokens.map(e => [e.value, TokenKind[e.kind], e.error]));
+    //console.log(tokens.map(e => [e.value, TokenKind[e.kind], e.error]));
 
     for (const t of tokens) {
 
-        if (t.kind == TokenKind.metaError) {
-            if (line.length > 0) {
-                out.push(<span key={out.length} className={'token-line'}>{line}</span>);
-                line = [];
+        if (t.kind == TokenKind.admonition) {
+            let icon: ReactNode | undefined = undefined;
+            switch (t.adminitionType!) {
+                case "danger": icon = <IconDanger/>; break;
+                case "warning": icon = <IconWarning/>; break;
+                case "note": icon = <IconNote/>; break;
+                case "tip": icon = <IconTip/>; break;
             }
-            out.push(
-                <span key={out.length} className={'token-info'}>
-                    <Admotion type="danger" title="Compilation Error">
-                        {t.value}
-                    </Admotion>
+
+            line.push(
+                <span key={out.length} className={`token-info inline-admonition ${t.adminitionType}`}>
+                    {icon}<span>{t.value}</span>
                 </span>
             );
-        } 
+        }
+
         else if (t.kind == TokenKind.newLine) {
             line.push( <br key={line.length}></br> );
             out.push( <span key={out.length} className={'token-line'}>{line}</span> );

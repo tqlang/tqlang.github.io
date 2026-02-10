@@ -12,10 +12,10 @@ organization and encapsulation.
 ---
 ## Structures
 
-Structures are the way of how you can declarate a new data type in the Abstract language. In it, you can organize collections
+Structures are the main way of how you can declarate a new data type in the tq language. In it, you can organize collections
 of primitives, privatize certain variables in closed scopes, abstract the management of huge amonts of data, and go on.
 
-A example of a structure being declarated and used in Abstract is:
+A example of a structure being declarated and used is:
 ```tq
 struct Biography {
 	@public let u8 myAge
@@ -25,7 +25,7 @@ struct Biography {
 
 func ... {
 	# this is creating a new variable of type Biography!
-	let Biography myBio = new Biography();
+	let Biography myBio = new Biography()
 
 	myBio.myAge = 17
 	myBio.myName = "Camila"
@@ -59,7 +59,7 @@ To initialize this structure, the following code:
 ```tq
 #/// func scope ///
 # Declarating the variable and creating the instance...
-let Biography myBio = new Biography();
+let Biography myBio = new Biography()
 # Defining the initial data ...
 myBio.name = "Camila"
 myBio.github = "lumi2021"
@@ -87,7 +87,7 @@ variables and run code as any function can do.
 A constructor can be declarated as follows:
 ```tq
 struct Biography {
-	# ...
+	...
 	constructor() {
 		# This will run when the structure is instantiated!
 	}
@@ -97,7 +97,7 @@ struct Biography {
 As it need some input data, the constructor will ask for some arguments:
 ```tq
 struct Biography {
-	# ...
+	...
 	constructor(string name, string gh, u8 age) {
 		# This will run when the structure is instantiated!
 	}
@@ -113,7 +113,7 @@ declarated constructors (it includes empty constructors).
 after that, we can process the data how we want:
 ```tq
 struct Biography {
-	# ...
+	...
 	constructor(string name, string gh, string age) {
 		# `this` is used to get the current instance.
 		# it should be used in case of naming conflict.
@@ -134,6 +134,7 @@ explicit return type:
 from Std.Memory import
 
 struct Biography {
+	...
 	@static constructor(string name, string gh, string age) *Biography {
 		let newBio = alloc(Biography)
 

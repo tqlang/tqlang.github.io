@@ -2,7 +2,7 @@
 :::under-construction
 :::
 
-Abstract also has some other primitive types that aren't just numbers.
+tq also has some other primitive types that aren't just numbers.
 Some of them exists to create some abstractions with complex collections of
 numerical values or create type encapsulation.
 
@@ -13,9 +13,10 @@ Booleans are types that can only represent the binary values `true` or `false`.
 These two values are extremely important to handle conditionals or hold simple
 states without messing the values.
 
-| Alias | Size            |
-|-------|:---------------:|
-| bool  | 1-bit           |
+```tq
+#/// func scope ///
+bool    # 1-bit | `true` or `false`
+```
 
 ```tq
 #/// func scope ///
@@ -33,13 +34,11 @@ The cake is a lie!
 
 A string is a data structure that is able to store text data. A string can be
 used to store and reproduce text characters easily. \
-In Abstract, every string is encoded in UTF-8, with characters varying from 1-4
-bytes in length.
 
-| Alias  | Size                                            |
-|--------|:-----------------------------------------------:|
-| string | variable (content is heap/statically-allocated) |
-
+```tq
+#/// func scope ///
+string    # variable size (can be heap or statically allocated)
+```
 
 ```tq
 #/// func scope ///
@@ -54,6 +53,9 @@ Hello, World!
 Goodbie, World!
 ```
 
+In tq, every string is by default encoded in UTF-8, with characters varying from 1-4
+bytes in length. To be able to use other encodings, null
+
 ---
 ## Chars
 :::not-implemented
@@ -62,25 +64,22 @@ Goodbie, World!
 Chars are data structures made to hold a single text character. Chars value can
 either be set or assigned manually with a character value or it can be set by
 getting a character from an index of a string. \
-As every string in Abstract is UTF-8, every character have the same length as a `i32`
+As every string in tq is UTF-8, every character have the same length as a `i32`
 in memory, being able to hold every possible character of the Unicode char set.
 
 :::note
 Keep in mind that some unicode characters may use more than one character to be stored,
 e.g. `"🇧🇷" = '🇧' + '🇷'`. \
-The Char struct cannot store that characters and instead need to be used with another
-Char value.
+The Char struct cannot store that characters, use a String or a slice of Chars for it!
 :::
 
 Chars are be castable from integers lower than 32 bits e.g. `u8`, `i7` or `u32`
 and castable to any integer.
 
-| Alias  | Size     | Implementation            |
-|--------|:--------:|:-------------------------:|
-| char   | 32 bits  | [Std.Types.Character](#)  |
-
-to declarate a Char data type, use `char`:
-
+```tq
+#/// func scope ///
+char    # 32-bits | can represent single unicode characters
+```
 ```tq
 #/// func scope ///
 const string myString = "Hello, World!"
@@ -98,7 +97,7 @@ Std.Console.writeln(myChar as byte) # '87'
 
 Ranges are types with a special syntax and are used widelly though the language.
 They can be representd as:
-```plain
+```pseudo
 <start>..<finish>:<step>
 ```
 And some values can be implicited, like:
@@ -118,7 +117,7 @@ from Std.Console import
 const myRange = 0..20 : 2
 var iterator = myRange.iterator()
 
-var uptr i
+var uint i
 while (iterator.reachEnd()) : (i = iterator.next()) {
     writeln(i)
 }
@@ -127,7 +126,7 @@ while (iterator.reachEnd()) : (i = iterator.next()) {
 ---
 ## Void
 
-Void is not a concrete type and it is used to indicate that a value is not returned.
+Void is an abstract type and it is used to indicate that a value is not returned.
 ```tq
 #/// func scope ///
 void
@@ -135,10 +134,9 @@ void
 
 ---
 ## NoReturn
-:::not-implemented
-:::
 
-NoReturn is an abstract type that is used to indicate that a function do not returns.
+
+NoReturn is an abstract type that is used to indicate that a function does not returns.
 ```tq
 #/// func scope ///
 noreturn

@@ -3,23 +3,23 @@
 :::under-construction
 :::
 
-As part of the Abstract's philosophy, eficiency during memory management is one
-of the main focus of the language. To help the user to do not get bothered with
-the tiny details, as default, abstract uses a system based in lifetime and
-ownership to determinate when data explicitly or implicitly allcated on the heap
-can be safetly and automatically deallocated.
+As part of the language's philosophy, eficiency during memory management is one
+of our main focus. To help the user to do not get bothered with the tiny details,
+as default, tq uses a system based in lifetime and ownership to determinate when
+data explicitly or implicitly allcated on the heap can be safetly and automatically
+deallocated.
 
 :::info
-Don't confuse "lifetime and ownership" with "ownership and borrowing". The abstract
-language do not include any kind of borrowing or a borrow checking.
+Don't confuse "lifetime and ownership" with "ownership and borrowing". The tq
+Language do not include any kind of borrowing system or borrow checking.
 :::
 
 ---
 ## Understanding Lifetime
 
-In a procedural language like abstract, every program beggins in a certain defined
-point (the entry point function) and expands it process in a linear stack, usually
-finishing at the same scope that it beggins. The same way as the language knows
+In a procedural language like tq, every program beggins in a certain defined
+point (the entry point function) and expands it process in one or multiple linear stacks,
+usually finishing at the same point that it beggins. The same way as the language knows
 where a method starts, ends or a data is sent in or out a function, it can understand
 where these data is being used and where it is being discarted.
 
@@ -39,8 +39,8 @@ func sayMessage(string msg) {
 }
 ```
 
-With a fast analysis, is not hard to understand when a data reference becomes
-inaccessible:
+With a quick analysis, is not hard to understand when a data reference becomes
+unaccessible:
 
 ```tq
 func main() !void {
@@ -61,8 +61,8 @@ func sayMessage(string msg) {
 }
 ```
 
-Also it is possible to go more further and identify when a reference is no
-more used or it value has changed:
+Also it is possible to go more further and identify when a value is no
+more used or a field has it value changed:
 
 ```tq
 func main() !void {
@@ -122,8 +122,8 @@ func sayMessage(string msg) {
 ---
 # The Static Garbage Collector
 
-However, abstract can ease the duty of cleaning up objects every single time
-it lifetime ends.
+However, tq can ease the duty of cleaning up objects every single time it
+lifetime ends.
 
 The language included a feature called The Static Garbage Collector, a garbage
 collector that acts in compile time and is developed to carefully 8nspect, select
@@ -181,11 +181,11 @@ func sayMessage(string msg) {
 ### disabling the garbafe Collector
 
 
-Ass everthing in abstract, you has full controll of every rsource provided, the
+As everthing in tq, you has full controll of every rsource provided. The
 language gives you full hability to manually choose when resources must be freeled.
-To disable the garbage collecting analysis and consequently, the implicit `delete`
-statements, use the `Std.GC` namespace to manuually control the garbage collector's
-behavior:
+To disable the garbage collecting analysis and consequently, the implicit reference
+counting and `delete` statements, use the `Std.GC` namespace to manuually control the
+garbage collector's behavior:
 
 ```tq
 from MyProgram import { MyHeapObject }
@@ -213,9 +213,10 @@ func main() !void {
 ---
 ## `TODO`
 
-as the same way as Abstract implicitly allocate on heap,
-it have a simple system of lifetime and ownershiping to know
-when to try to automatically deallocate these allocations made.
+as the same way as the language automatically and optionally
+allocates on heap to make the life easier, it have a simple system
+of lifetime and ownershiping to know when to try to automatically
+deallocate these allocations made.
 
 Knowing as every struct can implement a destructor, the language
 will follow the use of variables inside functions.

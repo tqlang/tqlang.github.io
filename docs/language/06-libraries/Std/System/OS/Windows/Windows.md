@@ -10,7 +10,7 @@ title: Windows
 :::
 
 
-```tq
+```pseudo
 namespace Std.System.OS.Windows
 ```
 

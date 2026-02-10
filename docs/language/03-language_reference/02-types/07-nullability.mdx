@@ -4,22 +4,23 @@
 :::not-implemented
 :::
 
-In abstract, for security reasons, all data and data reference is assumed to exist and
+In tq, to ensure security, all data and data reference is assumed to exist and
 be acessable as default . However, very often is usefull to have a way to identify if a
 data, object or reference exists and is acessible or not.
 
-Abstract allows to specify when a data can be expected to be nullable or not, also allowing
+The language allows to specify when a data can be expected to be nullable or not, also allowing
 a variety of security features to prevent errors when acessing null values.
 
 ---
 ## The nullable wrapper
 
-Abstract allows to declarate nullable types wrapping them with the nullable generic type.
+It is possible to declarate nullable types wrapping them with the nullable generic type.
 This wrapping can be made putting the interrogation (`?`) character right before the desired type.
 ```tq
-?i32
-?string
-?*List
+#/// func scope ///
+?i32                # Nullable signed 32-bit integer
+?string             # Nullable string
+?*DynamicArray      # Nullable pointer to a dynamic array
 ```
 
 ---
@@ -31,9 +32,11 @@ The language also provides some features to make the life using nullable types e
 
 The nullable wrapper will not allow you to access the data directly.
 ```tq
-func ?i32 foo() { ... }
+func foo() ?i32 { ... }
 
-# This is a compilation error!
+### /!\ Compilation Error!
+`?i32` is not assignable to `i32`, unwrap the value first!
+###
 let i32 myNumber = foo()
 ```
 
@@ -44,30 +47,32 @@ you can easily check the existence of the value using a conditional statement
 and use the unrapped value in the condition scope as follows:
 
 ```tq
-func ?i32 foo() { ... }
+func foo() ?i32 { ... }
 
-let ?i32 myNumber = foo()
-if (myNumber) {
-	# Inside the if scope, `myNumber` is shadowed
-	# to unwrap the value
+func ... {
+	let ?i32 myNumber = foo()
+	if (myNumber) {
+		# Inside the if scope, `myNumber` is shadowed
+		# to unwrap the value
+		let i32 value = myNumber
+	}
+
+	# Compilation Error! `?i32` is not assignable to `i32`
 	let i32 value = myNumber
 }
-
-# Compilation Error! `?i32` is not assignable to `i32`
-let i32 value = myNumber
-
 ```
 
 Or ignore the check and manually unrap the condition using the `.unwrap()` call
 or the `?` operator:
 ```tq
-func ?i32 foo() { ... }
+func foo() ?i32 { ... }
 
-let i32 myNumber = foo()?
+func ... {
+	let i32 myNumber = foo()?
 
-### is the same as ###
-
-let i32 myNumber = foo().unwrap()
+	# Tip: You can do as well
+	let i32 myNumber = foo().unwrap()
+}
 ```
 
 If you have a default value to use in case of null, you can use the `??` operator to
@@ -76,13 +81,13 @@ try to unwrap the expression and use the next expression if it's null:
 ```tq
 func ?i32 foo() { ... }
 
-let i32 value = foo() ?? 0
+func ... {
+	let i32 value = foo() ?? 0
 
-### is the same as ###
-
-let i32 value
-let ?i32 nullable = foo()
-if (nullable) value = nullable
-else value = 0
-
+	# Tip: You can do as well
+	let i32 value
+	let ?i32 nullable = foo()
+	if (nullable) value = nullable
+	else value = 0
+}
 ```

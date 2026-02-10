@@ -9,7 +9,7 @@ title: Collections
 :::not-implemented
 :::
 
-```tq
+```pseudo
 namespace Std.Types.Collections
 ```
 

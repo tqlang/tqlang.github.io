@@ -3,8 +3,8 @@
 :::
 
 Data collection is an extremely important component of a program for easy and efficient handling of huge amounts of data. \
-In abstract, some data collections are Arrays, Linked Lists, Queues, Stacks and Dictionaries, all of these are
-built-in data types or structures.
+In some examples of data collections are Arrays, Linked Lists, Queues, Stacks and Dictionaries, all those beung built-in or
+easy to use when using the Std Lib.
 
 :::info
 Keep in mind that different collection structures will have it own pros an cons.
@@ -16,20 +16,19 @@ Examine with attention each one to understand exactly what is better for your ne
 :::not-implemented
 :::
 
-Array lists are one of the most basic collection type in programming. They are based on the concept of a contiguous
-sequence of data in the memory that can be indexed by its position on the list.
+Arrays are one of the most basic collection type in programming. It is based on the concept of a contiguous
+sequence of data in the memory that can be indexed by its offset from the origin of the array.
 
-
-In abstract, array types are delcared as follows:
+Array types are delcared as follows:
 ```tq
 #/// func scope ///
 []anytype
 ```
 `[]` being a type modifier, indicating an array list of the following type
 
-| abstract | Size in bits     |
-|----------|:----------------:|
-| [i]t     | bitSizeOf(t) * i |
+| tq       | Size in bits       |
+|----------|:------------------:|
+| `[i]t`   | `bitSizeOf(t) * i` |
 
 *`t` - Type of elements \
 *`i` - Array list size
@@ -47,7 +46,7 @@ let [5]i32 myArray
 ```
 
 Sometimes it is more convenient to just assign the elements to an array without counting how many elements it has.
-In that case, the Abstract compiler can figure out the length on its own. Hence, the following syntax is also valid:
+In that case, the compiler can figure out the length on its own. Hence, the following syntax is also valid:
 ```tq
 #/// func scope ///
 # pay attention to the empty type modifier!
@@ -64,7 +63,7 @@ the elements will be aplyed:
 [10, 20, ..8, 30] # 10 & 20 will be placed at the start and 30 will be placed at index 8
 ```
 
-Some ways of declaring an array in Abstract are:
+Some ways of declaring array fields:
 ```tq
 #/// func scope ///
 let [10]i32 myArray

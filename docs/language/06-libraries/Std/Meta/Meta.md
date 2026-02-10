@@ -10,7 +10,7 @@ title: Meta
 :::
 
 
-```tq
+```pseudo
 namespace Std.Meta
 ```
 

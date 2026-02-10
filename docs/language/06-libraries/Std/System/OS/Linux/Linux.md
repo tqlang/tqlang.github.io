@@ -10,7 +10,7 @@ title: Linux
 :::
 
 
-```tq
+```pseudo
 namespace Std.System.OS.Linux
 ```
 

@@ -10,7 +10,7 @@ title: System
 :::
 
 
-```tq
+```pseudo
 namespace Std.System
 ```
 
@@ -25,7 +25,7 @@ namespace Std.System
 | x86       | Specific operations for the Intel x86 archtecture |
 | x86_64    | Specific operations for the Intel x86_64 archtecture |
 | AArch64   | Specific operations for the 64-bit ARM archtecture |
-| RISC_V    | Specific operations for the RISK-V archtecture |
+| RISC_V    | Specific operations for the RISC-V archtecture |
 
 ---
 
@@ -40,20 +40,20 @@ namespace Std.System
 ## Enums
 
 ```tq
-@public enum Archtecture {
-    x86,
-    x86_64,
-    aarch64,
-    risc_v
+@public typedef Archtecture {
+    case x86
+    case x86_64
+    case aarch64
+    case risc_v
 }
 ```
 
 ```tq
-@public enum HostSystem {
-    windows,
-    linux,
+@public typedef HostSystem {
+    case windows
+    case linux
 
-    uefi,
-    bios
+    case uefi
+    case bios
 }
 ```

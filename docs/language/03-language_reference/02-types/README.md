@@ -1,20 +1,8 @@
 # Data and Types
 
-Abstract is a strictly-typed language. It means that in abstract, every
-data or object that holds data need to have its data structure explicitly
-declared by the user.
-
-:::note
-
-`Data structures` refers to any kind of binary data stored by the machine, being
-primitive or not. Some examples are `bytes` that, in memory, uses a space of 8
-contiguous bits to represent a numerical value.
-
-Sometimes, types can use the same data structures to represent diferent values.
-As an example, a `char` have the same struct as a numerical `i32`, but is not
-handled as a number when declared as it.
-
-:::
+tq is a strictly-typed language. It means that every data or object that
+holds data is fully tied to a single data type, that can be explicitly declarated
+by the user or infered in case of being ommited.
 
 Like in C, C# or Java, all input, output and storage of data needs to be declared
 with a specific type to make sure any binary data will be read or written accordingly. \

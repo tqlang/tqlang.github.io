@@ -2,36 +2,36 @@ export type Token = {
     start: number;
     end: number;
     value: string;
-    wsp?: string;
     kind: TokenKind;
     error: boolean;
+    wsp?: string;
+    adminitionType?: string;
 };
 export enum TokenKind {
-        unknowm,
-        word, 
+    unknowm,
+    word, 
 
-        keyword,
-        type,
-        identifier,
-        attribute,
-        function,
-        struct,
-        number,
-        string,
-        boolean,
-        comment,
-        whitespace,
-        newLine,
+    keyword,
+    type,
+    identifier,
+    attribute,
+    function,
+    struct,
+    number,
+    string,
+    boolean,
+    comment,
+    whitespace,
+    newLine,
 
-        assignOperator,
-        binaryOperator,
-        unaryOperator,
-        arrowOperator,
-        punctuation,
+    assignOperator,
+    binaryOperator,
+    unaryOperator,
+    arrowOperator,
+    punctuation,
 
-        inlineHint,
-        metaError,
-        metaWarning,
+    inlineHint,
+    admonition,
 };
 export enum CodeBlockScope {
     root,
@@ -266,6 +266,11 @@ function lex(text: string): Token[] {
                 i++;
                 tokens.push({ kind: TokenKind.unaryOperator, start, end: i, value: text.slice(start, i), error: false });
                 continue;
+                
+            case '?':
+                i++;
+                tokens.push({ kind: TokenKind.unaryOperator, start, end: i, value: text.slice(start, i), error: false });
+                continue;
         }
 
         // ... (documentation quirk)
@@ -394,39 +399,56 @@ function analyze_comment(ctx: AnalyzerContext) {
     if (ctx.tokens[ctx.index].kind == TokenKind.comment) {
         const token = ctx.tokens[ctx.index];
 
-        if (token.value.startsWith("### /!\\ Compilation Error!")) {
+        if (token.value.startsWith("### /!\\ Compilation Error!")
+            || token.value.startsWith("# /!\\ Compilation Error!"))
+            create_inline_admonition(ctx, "/!\\ Compilation Error!", "danger");
 
-            while (ctx.index-1 > 0 && ctx.tokens[ctx.index-1].kind != TokenKind.whitespace)
-                ctx.tokens.splice((ctx.index--) - 1, 1);
+        else if (token.value.startsWith("### Info:")
+            || token.value.startsWith("# Info:"))
+            create_inline_admonition(ctx, "Info:", "note");
 
-            while (ctx.index-1 > 0 && ctx.tokens[ctx.index-1].kind != TokenKind.newLine)
-                ctx.tokens.splice((ctx.index--) - 1, 1);
+        else if (token.value.startsWith("### Tip:")
+            || token.value.startsWith("# Tip:"))
+            create_inline_admonition(ctx, "Tip:", "tip");
 
-            let value = ctx.tokens[ctx.index].value;
-            let valueLines = value.split('\n');
 
-            value = "";
-
-            const line0 = valueLines[0].trim();
-            const headerLen = "### /!\\ Compilation Error!".length;
-            if (line0.length > headerLen) value += line0.slice(0, line0.length - headerLen);
-
-            for (let i = 1; i < valueLines.length - 1; i++)
-                value += valueLines[i].trim() + '\n';
-
-            const line1 = valueLines[valueLines.length-1].trim();
-            if (line1.length > "###".length) value += line1.slice(0, line1.length - 3);
-
-            ctx.tokens[ctx.index].kind = TokenKind.metaError;
-            ctx.tokens[ctx.index].value = value.trim();
-
-            if (ctx.index+1 < ctx.tokens.length && ctx.tokens[ctx.index+1].kind == TokenKind.newLine)
-                ctx.tokens.splice(ctx.index+1, 1);
-
-        }
-
-        else ctx.index++;
+        ctx.index++;
     }
+}
+function create_inline_admonition(ctx: AnalyzerContext, header: string, type: string) {
+    let value = ctx.tokens[ctx.index].value;
+    let valueLines = value.split('\n');
+
+    value = "";
+
+    if (valueLines.length == 1) {
+
+        const line0 = valueLines[0].trim();
+        const headerLen = header.length + 2;
+        if (line0.length > headerLen) value += line0.slice(headerLen).trim();
+
+        console.log("header:", header, "\ncontent:", value);
+
+    } else {
+
+        const line0 = valueLines[0].trim();
+        const headerLen = 4 + header.length;
+        if (line0.length > headerLen) value += line0.slice(headerLen, line0.length - 3);
+
+        for (let i = 1; i < valueLines.length - 1; i++)
+            value += valueLines[i].trim() + '\n';
+
+        const line1 = valueLines[valueLines.length-1].trim();
+        if (line1.length > "###".length) value += line1.slice(0, line1.length - 3);
+
+    }
+
+    ctx.tokens[ctx.index].kind = TokenKind.admonition;
+    ctx.tokens[ctx.index].value = create_inline_admotion_normalize_content(value);
+    ctx.tokens[ctx.index].adminitionType = type;
+}
+function create_inline_admotion_normalize_content(content: string) : string {
+    return content.trim();
 }
 
 function analyze_fromImport(ctx: AnalyzerContext) {
@@ -474,11 +496,13 @@ function analyze_field(ctx: AnalyzerContext) {
         && isAnyWhitespace(ctx.tokens[ctx.index+1])
         && ctx.tokens[ctx.index+2].kind != TokenKind.word)
     {
+        // Ommited type
         ctx.tokens[ctx.index++].kind = TokenKind.identifier;
         ignore_whitespace_soft(ctx);
     }
     else
     {
+        // Explicit type
         analyze_expression(ctx);
         ignore_whitespace_soft(ctx);
 
@@ -492,7 +516,7 @@ function analyze_field(ctx: AnalyzerContext) {
     }
 
     if (ctx.tokens[ctx.index].value != '=') return;
-    ctx.tokens[ctx.index++].kind = TokenKind.binaryOperator;
+    ctx.tokens[ctx.index++].kind = TokenKind.assignOperator;
     ignore_whitespace_hard(ctx);
 
     analyze_expression(ctx);
@@ -511,11 +535,12 @@ function analyze_function(ctx: AnalyzerContext) {
         
         ctx.tokens[ctx.index++].kind = TokenKind.function;
         ignore_whitespace_soft(ctx); 
+
         analyze_parameters(ctx);
         ignore_whitespace_hard(ctx);
     
         if (ctx.index >= ctx.tokens.length) return;
-        if (ctx.tokens[ctx.index].value != '{' && ctx.tokens[ctx.index].kind != TokenKind.newLine) {
+        if (ctx.tokens[ctx.index].value != '{') {
             analyze_expression(ctx);
         }
 
@@ -566,19 +591,24 @@ function analyze_typedef(ctx: AnalyzerContext) {
 }
 function analyze_typedef_case(ctx: AnalyzerContext) {
     ctx.tokens[ctx.index++].kind = TokenKind.keyword;
+    ignore_whitespace_soft(ctx);
+
     while (ctx.index < ctx.tokens.length) {
 
-        ignore_whitespace_soft(ctx);
         analyze_expression(ctx);
-
+        ignore_whitespace_soft(ctx);
+        
         if (ctx.tokens[ctx.index].value != ',') break;
+        ctx.index++;
+        ignore_whitespace_hard(ctx);
     }
 }
 
 function analyze_delimited_scope(ctx: AnalyzerContext, scopeType: CodeBlockScope) {
     ctx.tokens[ctx.index++].kind = TokenKind.punctuation; // Left bracket
-    
+
     ctx.scope.push(scopeType);
+    ignore_whitespace_hard(ctx);
     while (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value != '}')
     {
         let lasti = ctx.index;
@@ -611,18 +641,6 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 }
             }
 
-            if (token.value == "new") {
-                ctx.tokens[ctx.index++].kind = TokenKind.keyword;
-
-                ignore_whitespace_soft(ctx);
-                analyze_expression(ctx);
-                ignore_whitespace_hard(ctx);
-
-                if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == '{')
-                    analyze_delimited_scope(ctx, CodeBlockScope.function);
-                return;
-            }
-
             switch (token.value) {
 
                 case 'let':
@@ -637,16 +655,25 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 case 'case':
                 case 'default':
                 case 'return':
+                case 'try':
+                case 'throw':
+                case 'catch':
                 case 'continue':
+                case 'new':
+                case 'delete':
                     ctx.tokens[ctx.index++].kind = TokenKind.keyword;
                     return;
-                
+                    
                 case 'bool':
                 case 'byte':
                 case 'void':
                 case 'char':
                 case 'string':
                 case 'noreturn':
+                case 'f16':
+                case 'f32':
+                case 'f64':
+                case 'f128':
                     ctx.tokens[ctx.index++].kind = TokenKind.type;
                     return;
                     
@@ -664,48 +691,88 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                     return;
 
             }
+            
             break;
 
-        case TokenKind.punctuation:
-            switch (token.value) {
-                case '(':
-                    if (ctx.index-1 >= 0
-                        && ctx.tokens[ctx.index-1].kind == TokenKind.word
-                        || ctx.tokens[ctx.index-1].kind == TokenKind.identifier)
-                    {
-                        ctx.tokens[ctx.index-1].kind = TokenKind.function;
-                        ctx.tokens[ctx.index++].kind = TokenKind.punctuation;
-                        return;
-                    }
-                    break;
-            }
-            break;
+        // case TokenKind.punctuation:
+        //     switch (token.value) {
+        //         case '(':
+        //             if (ctx.index-1 >= 0
+        //                 && (ctx.tokens[ctx.index-1].kind == TokenKind.word
+        //                 || ctx.tokens[ctx.index-1].kind == TokenKind.identifier))
+        //             {
+        //                 ctx.tokens[ctx.index-1].kind = TokenKind.function;
+        //                 ctx.tokens[ctx.index++].kind = TokenKind.punctuation;
+        //                 return;
+        //             }
+        //             break;
+        //     }
+        //     break;
     }
 
     ctx.index++;
 }
-function analyze_expression(ctx: AnalyzerContext) {
-    
-    if (ctx.tokens[ctx.index].value == '{') {
+function analyze_expression(ctx: AnalyzerContext, handleFunctionCall: boolean = true) {
+    const token = ctx.tokens[ctx.index];
+
+    if (token.value == "new") {
+        ctx.tokens[ctx.index++].kind = TokenKind.keyword;
+
+        ignore_whitespace_soft(ctx);
+        analyze_expression(ctx, false);
+        ignore_whitespace_soft(ctx);
+        analyze_functionCall(ctx);
+        ignore_whitespace_hard(ctx);
+
+        if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == '{')
+            analyze_delimited_scope(ctx, CodeBlockScope.function);
+        return;
+    }
+
+    if (token.value == '{') {
         analyze_delimited_scope(ctx, CodeBlockScope.function);
         return;
     }
 
+    if (token.value == '(') {
+        analyze_expression_tokens(ctx); // Left parenthesis
+    
+        while (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value != ')')
+            analyze_expression_tokens(ctx);
+
+        if (ctx.index < ctx.tokens.length && ctx.tokens[ctx.index].value == ')')
+            ctx.tokens[ctx.index++].kind = TokenKind.punctuation; // Right parenthesis
+    }
+
     while (true) {
         let i = ctx.index;
-        console.log(ctx.tokens[ctx.index].value);
         while (i < ctx.tokens.length && isValidInsideExpression(ctx.tokens[i])) i++;
         for (; ctx.index < i;) analyze_expression_tokens(ctx);
-
         ignore_whitespace_soft(ctx);
-        if (ctx.index < ctx.tokens.length
-            && ctx.tokens[ctx.index].kind == TokenKind.binaryOperator
-            || ctx.tokens[ctx.index].kind == TokenKind.assignOperator
-            || ctx.tokens[ctx.index].value == ';') {
-                
-                ctx.index++;
-                ignore_whitespace_soft(ctx);
-                continue;
+        
+        if (ctx.index < ctx.tokens.length && handleFunctionCall && ctx.tokens[ctx.index].value == '(') {
+
+            if (ctx.index-1 >= 0
+                && (
+                ctx.tokens[ctx.index-1].kind == TokenKind.word
+                || ctx.tokens[ctx.index-1].kind == TokenKind.identifier)
+            )
+                ctx.tokens[ctx.index-1].kind = TokenKind.function;
+
+            analyze_functionCall(ctx);
+            ignore_whitespace_soft(ctx);
+        }
+
+        if (
+            ctx.index < ctx.tokens.length
+            && (
+                ctx.tokens[ctx.index].kind == TokenKind.binaryOperator
+                || ctx.tokens[ctx.index].value == ';'
+            )
+        ) {
+            ctx.index++;
+            ignore_whitespace_soft(ctx);
+            continue;
         }
         break;
     }
@@ -766,9 +833,7 @@ function analyze_parameters(ctx: AnalyzerContext) {
 function ignore_whitespace_soft(ctx: AnalyzerContext) {
     while (ctx.index < ctx.tokens.length) {
         if (ctx.tokens[ctx.index].kind == TokenKind.whitespace) ctx.index++;
-
         else if (ctx.tokens[ctx.index].kind == TokenKind.comment) analyze_comment(ctx);
-
         else break;
     }
 }
@@ -779,9 +844,7 @@ function ignore_whitespace_hard(ctx: AnalyzerContext) {
             TokenKind.whitespace,
             TokenKind.newLine,
         ].includes(ctx.tokens[ctx.index].kind)) ctx.index++;
-
         else if (ctx.tokens[ctx.index].kind == TokenKind.comment) analyze_comment(ctx);
-
         else break;
     }
 }
@@ -819,7 +882,7 @@ function isValidInsideExpression(t: Token): boolean {
     return !isAnyWhitespace(t) &&
     (t.kind != TokenKind.punctuation
         || t.value == '.'
-        || t.value == '(' || t.value == ')'
-        || t.value == '[' || t.value == ']'
+        || t.value == '['
+        || t.value == ']'
         || t.value == ':');
 }

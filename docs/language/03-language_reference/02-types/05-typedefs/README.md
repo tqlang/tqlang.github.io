@@ -12,8 +12,8 @@ with custom rules and behavior.
 To declarate a typedef, you can do:
 ```tq
 typedef MyCustomType {
-    # Here you can define value
-    # entries and functions
+	# Here you can define value
+	# entries and functions
 }
 ```
 
@@ -21,14 +21,16 @@ To declarate the typedef with a specific undercovered type, use the following:
 
 ```tq
 typedef(MyType) MyCustomType {
-    # Here you can define value
-    # entries and functions
+	# Here you can define value
+	# entries and functions
 }
 ```
 
-Without it, the typedef will be automatically assigned to `uptr`. Also, any type
-that is not an integer will ask for a compile-time defined value for each value
-entry.
+Using an undercovered type automatically allows you to explicitly cast to
+that type.
+
+Any type that is not an integer will ask for a compile-time defined value for
+each value entry.
 
 ---
 ## Defining Entries
@@ -36,6 +38,7 @@ entry.
 There are two kinds of entries that can fit in a typedef: numericals and named entries.
 Is important to notice that both entries kinds can be used for any type, although they
 must be defined slightly diferent when using integer types or not.
+All typedef entries must beguin with the `case` keyword:
 
 ```tq
 typedef MyCustomType {
@@ -48,8 +51,8 @@ Numeric entries can also be defined using the range notation:
 
 ```tq
 typedef MyCustomType {
-    case 1..5
-    case 10..30:5
+	case 1..5
+	case 10..30:5
 }
 ```
 
@@ -57,12 +60,12 @@ To define named entries, just write it name following the identifiers convention
 
 ```tq
 typedef MyCustomType {
-    case 1..5
-    case 10..30:5
+	case 1..5
+	case 10..30:5
 
-    case NamedValue1
-    case NamedValue2
-    case NamedValue3
+	case NamedValue1
+	case NamedValue2
+	case NamedValue3
 }
 ```
 
@@ -79,21 +82,21 @@ Using a number that is not included in the typedef will result in a compilation 
 When using literal values, you need to first referenceate the typedef or use the dot
 notation to automatically identify the typedef type, if possible:
 ```tq
-let MyCustomType mytype1 = MyCustomType.NamedValue1
-let MyCustomType mytype2 = .NamedValue2
+let myvar1 = MyCustomType.NamedValue1
+let MyCustomType myvar2 = .NamedValue2
 ```
 
 Take this typedef implementation as a example:
 
 ```tq
 typedef Food {
-    case hamburger
-    case vegan_burger
-    case x_burger
-    case salad
-    case orange_juice
-    case chocolate_milk
-    case cola
+	case hamburger
+	case vegan_burger
+	case x_burger
+	case salad
+	case orange_juice
+	case chocolate_milk
+	case cola
 }
 
 # This function receives a  string and
@@ -102,18 +105,18 @@ typedef Food {
 # recognized.
 func doOrder(string order) !void {
 
-    let foodValue = match (order.trim()) {
-        case "hamburger" => .hamburger
-        case "vegan burger" => .vegan_burger
-        case "x burger" => .x_burger
-        case "salad" =>  .salad
-        case "orange juice" => .orange_juice
-        case "chocolate milk"
-        or   "choco milk" => .chocolate_milk
-        case "cola" => .cola
+	let foodValue = match (order.trim()) {
+		case "hamburger"        => .hamburger
+		case "vegan burger"     => .vegan_burger
+		case "x burger"         => .x_burger
+		case "salad"            =>  .salad
+		case "orange juice"     => .orange_juice
+		case "chocolate milk",
+		     "choco milk"       => .chocolate_milk
+		case "cola"             => .cola
 
-        case _ => throw falt.UnrecognizedInput()
-    }
+		default => throw falt.UnrecognizedInput()
+	}
 
 }
 ```

@@ -13,7 +13,7 @@ and clean data and adjust the process routine as the program needs.
 ---
 ## Handling Faults
 
-In abstract, any error, exception or invalid operation is handled as a Fault. \
+In tq, any error, exception or invalid operation is handled as a Fault. \
 Falts are data sructures that can be raised during runtime to indicate when and
 where a certain subroutine identified a problem in the execution. It can store
 data about where the error happened, what happened and aditional data do debug
@@ -34,10 +34,11 @@ function execution means no return value, so the caller needs to be notified whe
 and handle a simple alternative routine to allow the execution to continue running without
 the desired value.
 
-To make sure that the fault will not be a problem to the process, abstract will not allow
-a failable function to be invoked as usually:
+To make sure that the fault will not be a problem to the process, the compiler will not
+allow a failable function to be invoked as usually:
 
 ```tq
+#/// func scope ///
 # Try to invoke the function this way will result in a compilation error!
 tryToDoSomething()
 let u32 foo = tryToReturnSomething()
@@ -53,12 +54,13 @@ be null in case of an error, so if you have sure about the sucess of the
 operation, you can also unwrap the nullable value:
 
 ```tq
+#/// func scope ///
 # This will invoke the function, allowing it to abort without changing the
 # current process state.
 tryToDoSomething()!
 let u32 foo = tryToReturnSomething()!?           # nullable unwrapping
 
-# You can do as well
+# Tip: You can do as well
 tryToDoSomething().ignored()
 let ?u32 bar = tryToReturnSomething().ignored()  # not unwrapped
 ```
@@ -68,6 +70,7 @@ If the error cannnot be just ignored and need a specific process branching to
 handle it, the fault wrapper provide the `.onCatch()` call and the `catch` operator:
 
 ```tq
+#/// func scope ///
 # If the invoke get aborted, the catch block will be executed before
 # the execution continue
 tryToDoSomething() catch(fault err)
@@ -77,9 +80,10 @@ tryToReturnSomething() catch {
 	throw
 }
 
-# As well
+# Tip: You can do as well
 tryToDoSomething().onCatch((fault err) => {
-	Std.Console.writeln("A fault of type \{err.name} has occurred!") })
+	Std.Console.writeln("A fault of type \{err.name} has occurred!")
+})
 tryToReturnSomething().onCatch((fault err) => {
 	Std.Console.writeln("The process could not be completed,")
 	Std.Console.writeln("aborting due internal error!")
@@ -95,12 +99,13 @@ See that using the `try` operator will also make the function abort in case
 of an error.
 
 ```tq
+#/// func scope ///
 # If `tryToDoSomething` return a error, the function will abort and
 # the fault will be raised to the caller
 try tryToDoSomething()
 let u32 foo = try tryToReturnSomething() 
 
-# The same as
+# Tip: You can do as well
 tryToDoSomething() catch throw
 let u32 foo = tryToReturnSomething() catch throw
 ```
@@ -146,7 +151,7 @@ func safeDivide(f32 numerator, f32 denominator) !f32 {
 	if (denominator == 0) {
 		# Use the `new` operator to create a
 		# fresh instance
-		throw fault.DenominatorCannotBeZero()
+		throw new DenominatorCannotBeZeroFault()
 	}
 
 	return numerator / denominator

@@ -11,7 +11,7 @@ import { Funcdoc, FuncdocParam, Fielddoc, FielddocStores } from '@site/src/compo
 :::not-implemented
 :::
 
-```tq
+```pseudo
 namespace Std.Math
 ```
 
@@ -207,3 +207,26 @@ namespace Std.Math
     <FuncdocParam type="T" name="base">The base.</FuncdocParam>
     <FuncdocParam type="T" name="!ret">he logarithm of `val` in base `base`.</FuncdocParam>
 </Funcdoc>
+
+
+## Enums
+
+```tq
+@public typedef Operation {
+    case SafeAdd
+    case AddWithOverflow
+    case AddOnBounds
+
+    case SafeSubtract
+    case SubtractWithOverflow
+    case SubtractOnBounds
+
+    case SafeMultiply
+    case MultiplyWithOverflow
+    case MultiplyOnBounds
+
+    case Divide
+    case DivideFloor
+    case DivideCeilling
+}
+```

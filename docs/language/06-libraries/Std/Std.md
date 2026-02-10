@@ -5,11 +5,11 @@
 :::not-implemented
 :::
 
-```tq
+```pseudo
 namespace Std
 ```
 
-`Std` is the base namespace of the Abstract's standard library.
+`Std` is the root namespace of the Standard Library.
 
 ---
 ## Namespaces
@@ -17,7 +17,7 @@ namespace Std
 |:-----------------------------:|:------------|
 | [Types](./Types/)             | Implementation of the primitives and basic types |
 | [Console](./Console/)         | Functions related to the controll of the console (std in/out) |
-| [Math](./Math/)               | Mathematical abstractions |
+| [Math](./Math/)               | Mathematical operations and abstractions |
 | [Memory](./Memory/)           | Functions to handle and manage memory on lower levels |
 | [Process](./Process/)         | Functions to controll process and theads |
 | [System](./System/)           | Interfaces with the hosting system |

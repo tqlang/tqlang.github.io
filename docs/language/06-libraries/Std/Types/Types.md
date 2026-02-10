@@ -9,7 +9,7 @@ title: Types
 :::not-implemented
 :::
 
-```tq
+```pseudo
 namespace Std.Types
 ```
 

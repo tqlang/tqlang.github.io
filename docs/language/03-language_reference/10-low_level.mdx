@@ -27,7 +27,7 @@ Registers that are used to do operations or controll the CPU behavior.
 :::not-implemented
 :::
 
-When read and write to the registers themselves are not enough, Abstract
+When read and write to the registers themselves are not enough, tq
 has a rich system that allow the user to write an entire assembly subroutine.
 
 As a example of use, being targeted to x86_64 assemby:
@@ -81,12 +81,12 @@ func foo() {
 
 	let string message = "Hello, World!"
 
-	# Writing to STDOUT in x86 linux
+	# Writing to STDOUT in x86_64 linux
 	assemblyContext()
 
-	.MOV(.eax, 1)           # syscall = write
+	.MOV(.rax, 1)           # syscall = write
 	.MOV(.rdi, 1)           # descriptor = stdout
-	.MOV(.rsi, &message)    # message reference (internally solved to pointer)
+	.MOV(.rsi, &message)    # message reference
 	.MOV(.rdx, message.len) # message length
 	.SYSCALL()
 
