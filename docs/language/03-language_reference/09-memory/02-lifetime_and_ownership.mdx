@@ -189,11 +189,11 @@ garbage collector's behavior:
 
 ```tq
 from MyProgram import { MyHeapObject }
-from std import { GC }
+from Std import { GC }
 
 func main() !void {
 	const string message = "Hello, World!"
-	Std.writeln(message)
+	Std.Console.writeln(message)
 	# message is no more used soit is
 	# destroyed bythe GC
 
@@ -201,7 +201,7 @@ func main() !void {
 	# called again
 	GC.turnOff()
 
-	var myObject = new MyHeapObject();
+	var myObject = new MyHeapObject()
 	
 	# This enables the GC again
 	GC.turnOn()
@@ -211,7 +211,7 @@ func main() !void {
 ```
 
 ---
-## `TODO`
+### `TODO`
 
 as the same way as the language automatically and optionally
 allocates on heap to make the life easier, it have a simple system

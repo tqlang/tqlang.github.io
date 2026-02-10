@@ -660,7 +660,7 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 case 'catch':
                 case 'continue':
                 case 'new':
-                case 'delete':
+                case 'destroy':
                     ctx.tokens[ctx.index++].kind = TokenKind.keyword;
                     return;
                     
