@@ -18,7 +18,7 @@ namespace Std
 | [Types](./Types/)             | Implementation of the primitives and basic types |
 | [Console](./Console/)         | Functions related to the controll of the console (std in/out) |
 | [Math](./Math/)               | Mathematical operations and abstractions |
-| [Mem](./Memory/)              | Functions to handle and manage memory on lower levels |
+| [Mem](./Mem/)              | Functions to handle and manage memory on lower levels |
 | [Process](./Process/)         | Functions to controll process and theads |
 | [System](./System/)           | Interfaces with the hosting system |
 | [Meta](./Meta/)               | Interfaces for metaprogramming |
