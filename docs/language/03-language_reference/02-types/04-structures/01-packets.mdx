@@ -1,8 +1,6 @@
 # Packets
 :::under-construction
 :::
-:::not-implemented
-:::
 
 While a `struct` may reorganize it layout on memory in unexpected ways, packets are made to be a exact
 1:1 map of it implementation to memory.
@@ -10,8 +8,11 @@ While a `struct` may reorganize it layout on memory in unexpected ways, packets 
 Packets are designed to not just have total precision on it size in memory as too allow the user to
 have full controll of the layout of all the bits stored on it.
 
+<div className="content-not-implemented">
 ---
 ## Implementation and Usage
+:::not-implemented
+:::
 
 Packets can be implemented as structs, using the `@packed` attribute as following:
 ```tq
@@ -119,3 +120,4 @@ e.g.:
 	let u16 index                       # alignment of 16-bits
 }
 ```
+</div>

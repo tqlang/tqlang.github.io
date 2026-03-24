@@ -3,16 +3,103 @@ title: Your First Program
 ---
 
 # Creating Your First Program
+
+Prerequirements:
+- Install the latest version of the bootstrap compiler [(download here)](https://github.com/tqlang/tq-compiler/releases)
+- If not on windows, install dotnet runtime 10.0 or latest
+
+After installing the prerequirements, you must understand how a tq project is organized.
+
+The main building blocks of a program is a module. A module can be used to generate
+an executable or be included as a library.
+
+All modules are aways directory paths as the compiler automatically enumerates
+the namespace tree using this directory as a root. for more information, see
+[Namespaces](/docs/language/language_reference/namespaces).
+
+```shell title="Creating the folder using the command line"
+mkdir MyProgram
+cd MyProgram
+```
+
+After creating a project, it is necessary to have at least one script to be compiled.
+Inside the project's folder, create a file called `main.a`.
+
+This file will be used as the program's entry point. in there, you can declare a basic
+hello world inside a main function as follows:
+```tq title="main.tq"
+from Std.Console import
+
+func main() void {
+	writeln("Hello, World!")
+	writeln("I'm coding in tq!")
+}
+```
+
+After that, to be able to execute the compiler, you must run this command:
+```shell
+tqc build {ProgramName} \
+	--module {ProgramName} {ProgramPath} \
+	--module Std res://Lib/Std \
+
+	--include System.Runtime \
+	--include System.Console
+```
+
+remember to replace `{ProgramName}` with a name of your taste (must be a valid identifier)
+and `{ProgramPath}` with the relative path of the project's directory.
+
+`--module` or `-m` can be used to include a new module into compilation:
+```shell
+-module {ModuleName} {ModulePath}
+```
+
+`--include` or `-i` can be used to include a dotnet assembly into the compilation:
+```shell
+--include {AssemblyName}
+```
+(be aware that AssemblyName is the path of the assembly, without the `.dll extension`)
+
+After running the command, in case of success, you should be able to find a `.abs-out`
+folder with the following contents:
+
+```dir
+.abs-out/
+	|---- {ProgramName}.dll
+	'---- {ProgramName}.runtimeconfig.json
+```
+
+The program executable is compiled as a dotnet binary in the bootstrap version and can
+be easily inspected using a CIL inspector shuch as ILSpy.
+
+To run the program, use the following command:
+```shell
+dotnet {ProgramName}.dll
+```
+(remember to replace `{ProgramName}` with the actual name in the file)
+
+To send command line arguments to the program, use:
+```shell
+dotnet {ProgramName}.dll -- {args...}
+```
+
+
 :::under-construction
 :::
+# Not Implemented - Creating Your First Program
+:::not-implemented
+Everything below here is refering to the final implementation
+of the program. Do not considerate anything under there if you're
+using the compiler's bootstrap version!
+:::
 
-
+<div className="content-not-implemented">
 This document will help you how to set up tq tools in your
 machine as well as how to create, organize and execute your first
 program.
 
 ---
-## Setting up the environment
+## Not Implemented - Setting up the environment
 
 TODO
 
@@ -26,7 +113,7 @@ cd MyProgram
 ```
 
 ---
-## Writing the program
+## Not Implemented - Writing the program
 
 Inside the `MyProgram` folder, create a script file with the
 `.tq` extension e.g., `main.tq`.
@@ -42,13 +129,13 @@ func main() !void {
 ```
 
 ---
-## Running the Program
+## Not Implemented - Running the Program
 
 The language offers two ways to build and run the program: Using
 thecommand line to directly call the compiler or use a build script
 to talk to the compiler for you.
 
-### Building with the command line
+### Not Implemented - Building with the command line
 
 Using the command line, you can invoke the following command to run the
 project in the current workspace:
@@ -57,7 +144,7 @@ project in the current workspace:
 tqc build run
 ```
 
-### Running With a Build Automatization Script
+### Not Implemented - Running With a Build Automatization Script
 
 To use a build automatization script, create a new script that should
 be called `build.tq`.
@@ -77,6 +164,5 @@ abs init
 ```
 
 TODO
-
----
+</div>
 

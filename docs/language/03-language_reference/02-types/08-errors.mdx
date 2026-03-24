@@ -1,4 +1,4 @@
-# Faults
+# Errors
 :::under-construction
 :::
 :::not-implemented
@@ -11,9 +11,10 @@ To make the coding process less stressing, abstrat presents ways to handle error
 and clean data and adjust the process routine as the program needs.
 
 ---
-## Handling Faults
+## Handling Errors
 
-In tq, any error, exception or invalid operation is handled as a Fault. \
+<div className="content-not-implemented">
+In tq, any error, exception or invalid operation is handled as a Error. \
 Falts are data sructures that can be raised during runtime to indicate when and
 where a certain subroutine identified a problem in the execution. It can store
 data about where the error happened, what happened and aditional data do debug
@@ -34,7 +35,7 @@ function execution means no return value, so the caller needs to be notified whe
 and handle a simple alternative routine to allow the execution to continue running without
 the desired value.
 
-To make sure that the fault will not be a problem to the process, the compiler will not
+To make sure that the error will not be a problem to the process, the compiler will not
 allow a failable function to be invoked as usually:
 
 ```tq
@@ -44,7 +45,7 @@ tryToDoSomething()
 let u32 foo = tryToReturnSomething()
 ```
 
-Instead, you need to unwrap the result or handle the fault somehow.
+Instead, you need to unwrap the result or handle the error somehow.
 
 The first way of doing it is, as simply as this is, ignore the error with 
 the `.ignored()` call or the `!` operator after the resulted failable value.
@@ -67,24 +68,24 @@ let ?u32 bar = tryToReturnSomething().ignored()  # not unwrapped
 
 ---
 If the error cannnot be just ignored and need a specific process branching to
-handle it, the fault wrapper provide the `.onCatch()` call and the `catch` operator:
+handle it, the error wrapper provide the `.onCatch()` call and the `catch` operator:
 
 ```tq
 #/// func scope ///
 # If the invoke get aborted, the catch block will be executed before
 # the execution continue
-tryToDoSomething() catch(fault err)
-	Std.Console.writeln("A fault of type \{err.name} has occurred!")
+tryToDoSomething() catch(error err)
+	Std.Console.writeln("An error of type \{err.name} has occurred!")
 tryToReturnSomething() catch {
 	Std.Console.writeln("Aborting due internal error!")
 	throw
 }
 
 # Tip: You can do as well
-tryToDoSomething().onCatch((fault err) => {
-	Std.Console.writeln("A fault of type \{err.name} has occurred!")
+tryToDoSomething().onCatch((error err) => {
+	Std.Console.writeln("An error of type \{err.name} has occurred!")
 })
-tryToReturnSomething().onCatch((fault err) => {
+tryToReturnSomething().onCatch((error err) => {
 	Std.Console.writeln("The process could not be completed,")
 	Std.Console.writeln("aborting due internal error!")
 	throw err
@@ -101,7 +102,7 @@ of an error.
 ```tq
 #/// func scope ///
 # If `tryToDoSomething` return a error, the function will abort and
-# the fault will be raised to the caller
+# the error will be raised to the caller
 try tryToDoSomething()
 let u32 foo = try tryToReturnSomething() 
 
@@ -111,10 +112,10 @@ let u32 foo = tryToReturnSomething() catch throw
 ```
 
 ---
-## Raising a Fault
+## Raising an Error
 
-To allow a function to raise faults and alert any caller about a process error,
-the function need to be typed with the Fault Wrapper `Std.Types.Fault(type T)`.
+To allow a function to raise errors and alert any caller about a process error,
+the function need to be typed with the Error Wrapper `Std.Types.Error(type T)`.
 To make life easier, the compiler allows a type to be automatically weapped by
 using tha bang character (`!`) before the desired to wrap type:
 
@@ -130,20 +131,20 @@ Inside this function, we create a condition to verify the error as follows:
 
 ```tq
 func safeDivide(f32 numerator, f32 denominator) !f32 {
-	if (denominator == 0) {} # Raise a fault here!
+	if (denominator == 0) {} # Raise a error here!
 	return numerator / denominator
 }
 ```
 
 And we can use the `throw` statement to raise the exception,
 passing after it the exception that we want to raise.
-The fault is declarated when it is required to be created
-and the same name will aways refer to the same fault.
+The error is declarated when it is required to be created
+and the same name will aways refer to the same error.
 
 :::info
-We strongly reccomend to follow the pattern of fault names
+We strongly reccomend to follow the pattern of error names
 writing them aways in pascal case (`PascalCase`) and aways
-finish the name aways with `Fault`.
+finish the name with an `Error` sulfix.
 :::
 
 ```tq
@@ -151,10 +152,10 @@ func safeDivide(f32 numerator, f32 denominator) !f32 {
 	if (denominator == 0) {
 		# Use the `new` operator to create a
 		# fresh instance
-		throw new DenominatorCannotBeZeroFault()
+		throw new DenominatorCannotBeZeroError()
 	}
 
 	return numerator / denominator
 }
 ```
-
+</div>

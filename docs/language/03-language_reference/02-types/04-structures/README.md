@@ -1,6 +1,4 @@
 # Data Structures
-:::under-construction
-:::
 
 Data structures, also known as complex data types, are type abstractions
 to manipulate data in expecific ways that the primitive data types don't allow.
@@ -131,12 +129,12 @@ it is necessary to have control of this step manually in case of initializing da
 more specific. To allow so, it's possible to declare the `static constructor` that allows the definition of a
 explicit return type:
 ```tq
-from Std.Memory import
+from Std.Mem import
 
 struct Biography {
 	...
 	@static constructor(string name, string gh, string age) *Biography {
-		let newBio = alloc(Biography)
+		let newBio = create(Biography)
 
 		newBio.name = name
 		newBio.github = gh

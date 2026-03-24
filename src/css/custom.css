@@ -212,3 +212,7 @@ code ::selection {
     color: var(--prism-color);
     fill: var(--prism-color);
 }
+
+.content-not-implemented {
+    opacity: 10%;
+}

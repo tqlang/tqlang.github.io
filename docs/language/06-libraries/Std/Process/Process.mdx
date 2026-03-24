@@ -21,11 +21,20 @@ parallel tasks and threads.
 
 ## Functions
 
-<Funcdoc bookmark="exit_isize">
+<Funcdoc bookmark="getProgramArguments">
     ```tq
-    @public func noreturn exit(isize error)
+    @public func getProgramArguments() []string
+    ```
+    Returns the program's execution arguments as a slice of strings.
+
+    <FuncdocParam type="[]string" name="!ret">The program's arguments.</FuncdocParam>
+</Funcdoc>
+
+<Funcdoc bookmark="exit">
+    ```tq
+    @public func exit(uint status) noreturn
     ```
     Aborts the current process execution.
 
-    <FuncdocParam type="isize" name="error">The error status code.</FuncdocParam>
+    <FuncdocParam type="uint" name="status">The exit status code.</FuncdocParam>
 </Funcdoc>

@@ -49,7 +49,7 @@ namespace Std.Math
 <Funcdoc bookmark="sin_T_rad">
 
     ```tq
-    @public func T sin(type T, T rad)
+    @public func sin(type T, T rad) T
     ```
 
     Returns the sine value for the provided angle in radians.
@@ -62,7 +62,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="cos_T_rad">
     ```tq
-    @public func T cos(type T, T rad)
+    @public func cos(type T, T rad) T
     ```
     Returns the cossine value for the provided angle in radians.
 
@@ -74,7 +74,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="tan_T_rad">
     ```tq
-    @public func T tan(type T, T rad)
+    @public func tan(type T, T rad) T
     ```
     Returns the tangent value for the provided angle in radians.
 
@@ -85,7 +85,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="atan_T_val">
     ```tq
-    @public func T atan(type T, T x)
+    @public func atan(type T, T x) T
     ```
     Returns the arc-tangent of `x`.
 
@@ -96,7 +96,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="atan2_T_val">
     ```tq
-    @public func T atan2(type T, T x, T y)
+    @public func atan2(type T, T x, T y) T
     ```
     Returns the arc-tangent of the `x/y` value.
     Is more secure than [`atan`](#atan_t_val) as it provides
@@ -110,7 +110,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="sqrt_T_val">
     ```tq
-    @public func T sqrt(type T, T val)
+    @public func sqrt(type T, T val) T
     ```
     Returns the square root of the providade value.
 
@@ -121,7 +121,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="abs_T_val">
     ```tq
-    @public func T abs(type T, T val)
+    @public func abs(type T, T val) T
     ```
     Returns the absolute value of a signed number, without the sign.
 
@@ -132,7 +132,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="cail_T_val">
     ```tq
-    @public func T ceil(type T, T val)
+    @public func ceil(type T, T val) T
     ```
     Returns the smallest integral value greater or equal than `val`.
 
@@ -143,7 +143,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="floor_T_val">
     ```tq
-    @public func T floor(type T, T val)
+    @public func floor(type T, T val) T
     ```
     Returns the smallest integral value lesser or equal than `val`.
 
@@ -154,7 +154,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="truncate_T_val">
     ```tq
-    @public func T truncate(type T, T val)
+    @public func truncate(type T, T val) T
     ```
     Returns the provided value rounded towards zero.
 
@@ -165,7 +165,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="round_T_val">
     ```tq
-    @public func T round(type T, T val)
+    @public func round(type T, T val) T
     ```
     Returns the provided value rounded to the nearest integer.
 
@@ -176,7 +176,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="deg2rad_T_val">
     ```tq
-    @public func T deg2rad(type T, T deg)
+    @public func deg2rad(type T, T deg) T
     ```
     Converts the provided degress angle to radians.
 
@@ -187,7 +187,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="rad2deg_T_val">
     ```tq
-    @public func T rad2deg(type T, T rad)
+    @public func rad2deg(type T, T rad) T
     ```
     Converts the provided radians angle to degress.
 
@@ -198,7 +198,7 @@ namespace Std.Math
 
 <Funcdoc bookmark="log_T_val">
     ```tq
-    @public func T log(type T, T val, T base)
+    @public func log(type T, T val, T base) T
     ```
     Returns the logarithm of the provided value in the providade base.
 

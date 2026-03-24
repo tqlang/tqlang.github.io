@@ -1,0 +1,42 @@
+---
+title: Mem
+---
+import { Funcdoc, FuncdocParam } from '@site/src/components/docs/docs-utils';
+
+# Std.Mem
+
+:::under-construction
+:::
+
+
+```pseudo
+namespace Std.Mem
+```
+
+`Std.Mem` implements tools to manage memory, memory allocation,
+deallocation and common memory access configuration.
+
+---
+
+<Funcdoc bookmark="alloc">
+    ```tq
+    @public func alloc(type T, uint length, Alignment alignment) []T
+    ```
+    Allocates a slice in heap memory
+
+    <FuncdocParam type="type" name="T">Slice's element type.</FuncdocParam>
+    <FuncdocParam type="uint" name="length">Desired length.</FuncdocParam>
+    <FuncdocParam type="Alignment" name="alignment">Desired alignment.</FuncdocParam>
+    <FuncdocParam type="[]T" name="!ret">The allocated slice</FuncdocParam>
+</Funcdoc>
+
+<Funcdoc bookmark="create">
+    ```tq
+    @public func create(type T, Alignment alignment) *T
+    ```
+    Allocates an object in heap memory
+
+    <FuncdocParam type="type" name="T">Object's element type.</FuncdocParam>
+    <FuncdocParam type="Alignment" name="alignment">Desired alignment.</FuncdocParam>
+    <FuncdocParam type="*T" name="!ret">The allocated object</FuncdocParam>
+</Funcdoc>

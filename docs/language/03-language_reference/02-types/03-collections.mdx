@@ -13,8 +13,6 @@ Examine with attention each one to understand exactly what is better for your ne
 
 ---
 ## Arrays
-:::not-implemented
-:::
 
 Arrays are one of the most basic collection type in programming. It is based on the concept of a contiguous
 sequence of data in the memory that can be indexed by its offset from the origin of the array.
@@ -35,6 +33,15 @@ Array types are delcared as follows:
 
 Array lists are not dynamically allocated in memory. They need to be allocated with a predefined size and
 cannot be resized after creation. 
+
+It is currently not possible to declare arrays with a predefined size, so impossible to allocate statically.
+If needed, use manual allocation instead:
+```tq
+#/// func scope ///
+let []i32 myArray = Std.Mem.alloc(i32, 5, Allignment._1)
+```
+
+<div className="content-not-implemented">
 The array initialization syntax pre-allocate memory based on the length of the array which is
 mentioned between the array type modifier `[length]`, also ensuring that the array assigned to this variable
 will aways be of the explicited size. \
@@ -70,6 +77,7 @@ let [10]i32 myArray
 const fruits = ["orange", "mango", "strawberry", "tomato"]
 const [20]i8 myBytes = [255, 254, 253 ..]
 ```
+</div>
 
 ### The Index Operator
 To handle single values inside an array, it uses the index operator `[]`.
@@ -93,6 +101,7 @@ myIndex = 4
 Std.Console.writeln(myArray[myIndex]) # out: 50
 ```
 
+<div className="content-not-implemented">
 ---
 ## Dynamic Arrays
 :::not-implemented
@@ -154,3 +163,4 @@ elements.
 ## Dictionaries
 :::not-implemented
 :::
+</div>
