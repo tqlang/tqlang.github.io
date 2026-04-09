@@ -51,7 +51,7 @@ and `{ProgramPath}` with the relative path of the project's directory.
 
 `--module` or `-m` can be used to include a new module into compilation:
 ```shell
--module {ModuleName} {ModulePath}
+--module {ModuleName} {ModulePath}
 ```
 
 `--include` or `-i` can be used to include a dotnet assembly into the compilation:
@@ -65,8 +65,8 @@ folder with the following contents:
 
 ```dir
 .abs-out/
-	|---- {ProgramName}.dll
-	'---- {ProgramName}.runtimeconfig.json
+	 |-- {ProgramName}.dll
+	 '-- {ProgramName}.runtimeconfig.json
 ```
 
 The program executable is compiled as a dotnet binary in the bootstrap version and can
@@ -75,6 +75,8 @@ be easily inspected using a CIL inspector shuch as ILSpy.
 To run the program, use the following command:
 ```shell
 dotnet {ProgramName}.dll
+# or
+dotnet {ProgramName}.dll -- {args...}
 ```
 (remember to replace `{ProgramName}` with the actual name in the file)
 
