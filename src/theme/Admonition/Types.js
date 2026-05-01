@@ -14,7 +14,7 @@ function NotImplemented(props) {
 function UnderConstruction(props) {
   return (
     <div className="under-construction warning">
-      <h1>This page is still under construction!</h1>
+      <h1>This section is still under construction!</h1>
       {props.children && <div className="extra-content">{props.children}</div>}
     </div>
   );

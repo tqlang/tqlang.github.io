@@ -71,7 +71,7 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'languageSidebar',
+          sidebarId: 'mainSidebar',
           position: 'left',
           label: 'Docs',
         },
