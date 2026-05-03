@@ -30,7 +30,6 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           editUrl: 'https://github.com/tqlang/tqlang.github.io/tree/main/',
@@ -71,7 +70,7 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'mainSidebar',
+          sidebarId: 'defaultSidebar',
           position: 'left',
           label: 'Docs',
         },
