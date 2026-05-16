@@ -42,7 +42,7 @@ Std.Console.writeln("This string"
 Std.Console.writeln("This string" + " is being used to break this line!")
 ```
 
-Is also possible to write two expressions in the same line using a semicolon (`;`) character.
+It is also possible to write two or more statements in the same line using a semicolon (`;`) character.
 It will emulate a line break when interpreted. e.g:
 
 ```tq
@@ -86,7 +86,7 @@ IAm.executeable()
 ## Data and Types
 
 tq is a strictly-typed language. It means that every data or object that
-holds data is fully tied to a single data type, that can be explicitly declarated
+holds data is fully tied to a single data type that can be explicitly declarated
 by the user or infered in case of being ommited.
 
 Like in C, C# or Java, all input, output and storage of data needs to be declared
@@ -150,11 +150,7 @@ The value is an int32 and it is 32!
 The value is an int32 and it is 16!
 ```
 
-Bellow, there is a small list of some of the most important types on the language.
-:::info
-Other types still exists and some of those will still be presented in this document
-as they may deserve a more apropriated context
-:::
+Bellow, there is a list o the language's built-in types.
 
 ---
 ### Integer
@@ -164,7 +160,7 @@ represents an always complete (non-fractional) value, never allowing
 any decimal point.
 
 For historical, computational and memory optimal reasons, the computer gives
-an extensive range of possibilities about numeric integer values.
+an extensive range of possibilities for numeric integer types.
 
 To declare an integer type in the tq Language, use the low-case
 letter `i` or `u` to declare the kind of the integer (signed or unsigned
@@ -174,9 +170,9 @@ will occupy in memory.
 Examples of valid integer types are:
 ```pseudo
 i8   # signed 8-bit (1 byte) integer
-u16  # unsigned 16-bit integer
-i128 # signed 128-bit integer
-u256 # unsigned 256-bit integer
+u16  # unsigned 16-bit (2 bytes) integer
+i128 # signed 128-bit (16 bytes)integer
+u256 # unsigned 256-bit (32 bytes) integer
 i1   # signed single bit (0 or -1)
 ```
 
@@ -185,10 +181,10 @@ The size in bits must be a integer inside the range of 1 to 256.
 :::info[Although,]
 it is reccomended to avoid bit lengths that are not a power
 of two greater or equal than 8 (8, 16, 32, 64, 128, etc.).
-Most real machines will peform calculations faster in this range, as
+Most real machines will peform calculations faster in this range as
 the effort to convert the value from and to the defined alignment is
 lower. \
-More about it will be covered in  [alignment](/docs/language/language_reference#data-alignment).
+More about it will be covered in [alignment](/docs/language/language_reference#data-alignment).
 :::
 
 The following non-exaustive table shows some common integer types and
@@ -200,19 +196,19 @@ its corresponding type in the C programming language:
 | `i16`          | int16_t         | 16-bits               | -32,768 to 32,767               |
 | `i32`          | int32_t         | 32-bits               | -2,147,483,648 to 2,147,483,647 |
 | `i64`          | int64_t         | 64-bits               | -9.2x10¹⁸ to 9.2x10¹⁸           |
-| `int`          | N/A             | (target word size)    | (target word range)             |
+| `int`          | size_t          | (target word size)    | (target word range)             |
 | `iptr`         | intptr_t        | (target pointer size) | (target pointer range)          |
 | `u8` or `byte` | uint8_t         | 8-bits                | 0 to 255                        |
 | `u16`          | uint16_t        | 16-bits               | 0 to 65,535                     |
 | `u32`          | uint32_t        | 32-bits               | 0 to 4,294,967,295              |
 | `u64`          | uint64_t        | 64-bits               | 0 to 1.8x10¹⁹                   |
-| `uint`         | uintptr_t       | (target word size)    | (target word range)             |
+| `uint`         | usize_t         | (target word size)    | (target word range)             |
 | `uptr`         | uintptr_t       | (target pointer size) | (target pointer range)          |
 
 The `int`, `uint`, `iptr` and `uptr` types are special integers that are defined
 by the target. `int` and `uint` are the size of the machine's word (aka the integer size that the
 CPU can handle naturally) and `iptr` and `uptr` are the minimum size needed to store the numeric
-representation of any pointer, being equal or diferent to `int`/`uint` depending on the
+representation of any pointer, being equal or diferent of `int`/`uint` depending on the
 architecture.
 
 E.g.:
@@ -231,13 +227,11 @@ If compiling the project to a dotnet assemlby: \
 
 ---
 ### Floating-point
-:::not-implemented
-:::
 
 FP(floating-point) numbers are somewhat complicated numerical values used to reproduce fractions.
 All the standard FP numbers are implemented following the [`IEEE 754`](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
-Here are the floating-point numeric types listed below, with their
+Here is the exaustive list of floating-point numeric types with their
 corresponding type in the C programming language:
 
 | Alias   | Equivalent in C |
@@ -294,32 +288,28 @@ Hello, World!
 Goodbie, World!
 ```
 
-In tq, every string is by default encoded in UTF-8, with characters varying from 1-4
-bytes in length. To be able to use other encodings, null
+In tq, all strings are by default encoded in the host's default encoding (UTF-8 if no default specified). To be able to use any specific encodings, use the `Std.memory.StringBuffer` type.
 
 ---
 ### Char
-:::not-implemented
-:::
 
 Chars are data structures made to hold a single text character. Char values can
 either be set or assigned manually with a character value or it can be set by
 getting a character from an index of a string. \
-As every string in tq is UTF-8, every character have the same length as a `i32`
-in memory, being able to hold every possible character of the Unicode char set.
+Every character have the same length as a `i32` in memory, being able to hold every possible codepoint of the Unicode char set.
 
 :::note
-Keep in mind that some unicode characters may use more than one character to be stored,
+Keep in mind that some unicode characters may use more than one real character to be stored,
 e.g. `"🇧🇷" = '🇧' + '🇷'`. \
-The Char struct cannot store that characters, use a String or a slice of Chars for it!
+The Char struct cannot store that characters, use a String or a slice of Chars to fo so!
 :::
 
-Chars are be castable from integers lower than 32 bits e.g. `u8`, `i7` or `u32`
-and castable to any integer.
+Chars are explicitly castable from integers lower than 32 bits e.g. `u8`, `i7` or `u32`
+and explicitly castable to any integer.
 
 ```tq
 #/// func scope ///
-char    # 32-bits | can represent single unicode characters
+char    # 32-bits | can represent single unicode codepoints
 ```
 ```tq
 #/// func scope ///
@@ -333,8 +323,6 @@ Std.Console.writeln(myChar as byte) # '87'
 
 ---
 ### Range
-:::not-implemented
-:::
 
 Ranges are types with a special syntax and are used widelly though the language.
 They can be representd as:
@@ -359,7 +347,7 @@ const myRange = 0..20 : 2
 var iterator = myRange.iterator()
 
 var uint i
-while (iterator.reachEnd()) : (i = iterator.next()) do {
+while (iterator.reachEnd()) : (i = iterator.next()) {
     writeln(i)
 }
 ```
@@ -367,7 +355,7 @@ or using a for-loop:
 ```tq
 #/// func scope ///
 var uint i
-for i in iterator do {
+for i in iterator {
     writeln(i)
 }
 ```
@@ -404,7 +392,7 @@ Examine with attention each one to understand exactly what is better for your ne
 ---
 #### Arrays
 
-Arrays are one of the most basic collection type in programming. It is based on the concept of a contiguous
+Arrays (in tq, may also be called slices) are one of the most basic collection type in programming. It is based on the concept of a contiguous
 sequence of data in the memory that can be indexed by its offset from the origin of the array.
 
 Array types are delcared as follows:
@@ -421,17 +409,10 @@ Array types are delcared as follows:
 *`t` - Type of elements \
 *`i` - Array list size
 
-Array lists are not dynamically allocated in memory. They need to be allocated with a predefined size and
-cannot be resized after creation. 
+Array lists are not implicitly allocated in memory. They need to be allocated with a predefined size and
+cannot be automatically resized after creation. 
 
-It is currently not possible to declare arrays with a predefined size, so impossible to allocate statically.
-If needed, use manual allocation instead:
-```tq
-#/// func scope ///
-let []i32 myArray = Std.Mem.alloc(i32, 5, Allignment._1)
-```
-
-The array initialization syntax pre-allocate memory based on the length of the array which is
+The array initialization syntax pre-allocates memory based on the length of the array which is
 mentioned between the array type modifier `[length]`, also ensuring that the array assigned to this variable
 will aways be of the explicited size. \
 e.g. the following code will create an array for the `i32` type with pre-allocated memory to only 5 elements of
@@ -461,10 +442,10 @@ const [20]i8 myBytes
 ```
 
 #### The Index Operator
-To handle single values inside an array, it uses the index operator `[]`.
+To handle single values inside an array, it uses the index operator `[i]`.
 
-The index operator is declared putting a number surrounded by square brackets after the array indentifier.
-The declared number is the index, the position of the desired element on the list, starting from zero.
+The index operator is declared putting a value surrounded by square brackets after the array indentifier.
+The declared value is the index, the position of the desired element on the list, starting from zero.
 
 The index operator will return an element from the array, at the specified index, as follows:
 ```tq
@@ -474,8 +455,8 @@ let i32 elementAt1 = myArray[1] # = 20
 let i32 elementAt2 = myArray[2] # = 30
 
 # The index also works with variables
-# Any numeric integer data type can be used as
-# a indexer!
+# Any numeric integer data type can be used
+# as indexer!
 let i8 myIndex = 0
 Std.Console.writeln(myArray[myIndex]) # out: 10
 myIndex = 4
@@ -487,8 +468,7 @@ Std.Console.writeln(myArray[myIndex]) # out: 50
 :::not-implemented
 :::
 
-Dynamic arrays are wrappers around built-in arrays that allow them to be resized
-during runtime. Dynamic arrays will require an allocator to work as they lies
+Dynamic arrays are wrappers around built-in arrays that automatize the process of resizingit during runtime. Dynamic arrays will require an allocator to work as they lies
 entirelly on the heap.
 
 ```tq
@@ -525,30 +505,53 @@ elements.
 :::
 
 ---
-#### Linked Lists
-:::not-implemented
-:::
-
----
 #### Queues
 :::not-implemented
 :::
+
+Queues are `DynamicArray`'s with specific behavior specialized to work as a FIFO list.
+
+```tq
+from Std.Console import
+from Std.Types.Collections import { Queue }
+
+func main() !void {
+    # TODO
+}
+```
 
 ---
 #3## Stacks
 :::not-implemented
 :::
 
+Stacks are `DynamicArray`'s with specific behavior specialized to work as a FILO list.
+
+```tq
+from Std.Console import
+from Std.Types.Collections import { Stack }
+
+func main() !void {
+    # TODO
+}
+```
+
 ---
 #### Dictionaries
 :::not-implemented
 :::
 
+Dictionaries are data structures that provides an associative container in the shape of key-value pairs.
+
+Dictionary preserves no insertion order unless explicitly stated otherwise.
+
+// TODO
+
 ---
 ### Structures
 
 Structures, also known as complex data types, are type abstractions to manipulate
-data in expecific ways that the primitive data types don't allow.
+data in expecific ways that the primitive data types do not allow to.
 
 Structures can include a huge ammount of primmitives, other structures
 and even behaviour, allowing it to be a powerfull and rich tool for data storage,
@@ -578,10 +581,8 @@ constant pointer that indicates it type in a global type table. This implicit da
 to know the type of the structure anywhere during runtime.
 
 #### Constructors
-:::not-implemented
-:::
 
-Sometimes, is usefull to have a single function to abstract complex initialization of data.
+Sometimes, it is usefull to have a single function to abstract complex initialization of data.
 for instance, take the following structure declaration example:
 ```tq
 struct Biography {
@@ -688,8 +689,12 @@ struct Biography {
 ```
 
 #### Static Functions and Methods
-:::under-construction
-:::
+
+Structures can contain member functions that execute within the structure's context. those functions have access to all the structure's members and non-private extended members.
+
+member functions can be implemented as the same as normal functions inside the structure boundaries. Those functions are only accessible though a structure instance.
+
+It is also possible to implement functions inside the structure context that cannot be called from the instance, needing to be refered using the type name itself, so called static functions. To define a function as static, use the attribute `@static`.
 
 <details>
 <summary>Packets</summary>
@@ -697,9 +702,9 @@ struct Biography {
     :::
 
     While a `struct` may reorganize it layout on memory in unexpected ways, packets are made to be a exact
-    1:1 map of it implementation to memory.
+    1:1 map of its implementation to memory.
 
-    Packets are designed to not just have total precision on it size in memory as too allow the user to
+    Packets are designed to not just have total precision on it size in memory as to allow the user to
     have full controll of the layout of all the bits stored on it.
 
     ---
