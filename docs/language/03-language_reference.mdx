@@ -517,8 +517,23 @@ from Std.Console import
 from Std.Types.Collections import { Queue }
 
 func main() !void {
-    # TODO
+    const byteQueue = new Queue(i8)()
+
+    byteQueue.enqueue(10)
+    byteQueue.enqueue(20)
+    byteQueue.enqueue(30)
+    byteQueue.enqueue(40)
+
+    writeln(byteQueue.dequeue())
+    writeln(byteQueue.dequeue())
+    byteQueue.dequeue()
+    writeln(byteQueue.peek())
 }
+```
+```text title="Console Output"
+10
+30
+40
 ```
 
 ---
@@ -533,8 +548,23 @@ from Std.Console import
 from Std.Types.Collections import { Stack }
 
 func main() !void {
-    # TODO
+    const byteStack = new Stack(i8)()
+
+    byteStack.push(10)
+    byteStack.push(20)
+    byteStack.push(30)
+    byteStack.push(40)
+
+    writeln(byteStack.pop())
+    writeln(byteStack.pop())
+    byteStack.pop()
+    writeln(byteStack.peek())
 }
+```
+```text title="Console Output"
+40
+20
+10
 ```
 
 ---
@@ -1671,6 +1701,67 @@ func ... {
 ```
 
 ---
+## Jumps
+:::under-construction
+:::
+
+Unconditional branching can be performed by the use of a label and a `goto` statement.
+
+```tq
+#/// func scope ///
+goto skip
+Std.Console.writeln("Line skipped!")
+
+label skip:
+Std.Console.writeln("Executing here")
+```
+
+`goto` statements can be used to manually perform loops
+
+```tq
+#/// func scope ///
+let i = 0
+
+# Implementation of a `do...while` loop
+
+label body:
+{
+	Std.Console.writeln(i)
+	i++
+}
+label check:
+{
+	if (i < 50) goto body
+}
+```
+
+or manually perform conditional branching
+
+```tq
+#/// func scope ///
+
+if (choise == 'A') goto if_option_a
+else goto if_option_b
+
+label if_option_a:
+{
+	Std.Console.writeln("Option A")
+	goto end
+}
+label if_option_b:
+{
+	Std.Console.writeln("Option B")
+}
+label end:
+
+Std.Console.writeln("End of condition")
+```
+
+:::warning
+Those examples are not real use cases and must not be replicated in real code.
+Aways prefer the language's built in statements when possible
+:::
+
 ## Namespaces
 
 :::under-construction
@@ -2275,7 +2366,7 @@ func sayMessage(string msg) {
 As everthing in tq, you has full controll of every rsource provided. The
 language gives you full hability to manually choose when resources must be freeled.
 To disable the garbage collecting analysis and consequently, the implicit reference
-counting and `delete` statements, use the `Std.GC` namespace to manuually control the
+counting and `destroy` statements, use the `Std.GC` namespace to manuually control the
 garbage collector's behavior:
 
 ```tq
@@ -2297,7 +2388,7 @@ func main() !void {
 	# This enables the GC again
 	GC.turnOn()
 
-	delete myObject
+	destroy myObject
 }
 ```
 
@@ -2359,9 +2450,8 @@ everything allocated with it.
 The language's standard library and compiler have built-in features that allows the development of
 asyncronous programming. 
 
-Assyncrony is the hability of schedue calls and routines to run only when they are able to, executing
+Asyncrony is the hability of schedue calls and routines to run only when they are able to, executing
 other tasks meanwhile the current one is busy or waiting.
-
 
 
 ## Low-Level
