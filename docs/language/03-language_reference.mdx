@@ -202,12 +202,13 @@ its corresponding type in the C programming language:
 | `i64`          | int64_t         | 64-bits               | -9.2x10¹⁸ to 9.2x10¹⁸           |
 | `int`          | N/A             | (target word size)    | (target word range)             |
 | `iptr`         | intptr_t        | (target pointer size) | (target pointer range)          |
-| `u8` or `byte` | uint8_t         | 8-bits                | 0 to 255                        |
+| `u8`           | uint8_t         | 8-bits                | 0 to 255                        |
 | `u16`          | uint16_t        | 16-bits               | 0 to 65,535                     |
 | `u32`          | uint32_t        | 32-bits               | 0 to 4,294,967,295              |
 | `u64`          | uint64_t        | 64-bits               | 0 to 1.8x10¹⁹                   |
 | `uint`         | uintptr_t       | (target word size)    | (target word range)             |
 | `uptr`         | uintptr_t       | (target pointer size) | (target pointer range)          |
+| `byte`         | char            | (target byte size)    | (target byte range)             |
 
 The `int`, `uint`, `iptr` and `uptr` types are special integers that are defined
 by the target. `int` and `uint` are the size of the machine's word (aka the integer size that the
@@ -2347,6 +2348,17 @@ everything allocated with it.
 :::
 
 ---
+
+## Asyncronous
+
+The language's standard library and compiler have built-in features that allows the development of
+asyncronous programming. 
+
+Assyncrony is the hability of schedue calls and routines to run only when they are able to, executing
+other tasks meanwhile the current one is busy or waiting.
+
+
+
 ## Low-Level
 
 :::under-construction
