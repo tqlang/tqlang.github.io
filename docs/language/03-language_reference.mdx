@@ -83,6 +83,105 @@ IAm.executeable()
 
 ---
 
+## Expressions
+
+Expressions are textual rrepresentations of values or operations.
+
+They may represent:
+- literals
+- variable references
+- operations
+- function calls
+- object access
+- collections
+
+
+```tq
+let global = ...
+
+func ... {
+	Std.Console.writeln(  # Function call xpression
+		gloal             #   '- Fieeld reference expression
+	)
+	Std.Console.writeln(  # Fnction call expression
+		"Hello, World!"   #   '- String literal expression
+	)
+	
+	# Local variables are expressions too!
+	let collection = {5, 10, 20}.repeat(10 * 10)
+	# collection     [_________]
+	# access         [________________]
+	# Number literal                    []   []
+	# Binary operation                  [_____]
+	# function call  [_________________________]
+}
+```
+
+Expressions can be combined using operators to form larger expressions.
+
+```tq
+10 + 5 * 20
+```
+
+In this example:
+`5 * 20` is evaluated first, resulting in `100`
+then `10 + 100` is evaluated, resulting in `110`
+
+because expressions follow precedence and associativity rules similar to mathematics.
+
+```tq
+Std.Console.writeln(10 + 5 * 20) # 110
+# Parenthesis xan be used to explicitly control the evaluation order
+Std.Console.writeln((10 + 5) * 20) # 300
+```
+
+### Operator Precedence
+
+From lowest precedence to highest precedence.
+
+| Level | Operators                                      |
+| ----- | ---------------------------------------------- |
+| 1     | `=` `+=` `-=` `*=` `/=` `%=`                   |
+| 2     | `?:`                                           |
+| 3     | `or` `and`                                     |
+| 4     | `+`  `+%` `+\|` `-` `-%` `-\|`                 |
+| 5     | `*` `*%` `*\|` `/` `/_` `/^` `%` `**`          |
+| 6     | `==` `!=` `===` `!==` `<` `>` `<=` `>=`        |
+| 7     | `&` `^` `<<` `>>`                              |
+| 8     | `as`                                           |
+| 9     | Prefix: `+` `-` `*`  `&` `~` `!` `?` `++` `--` |
+| 10    | Postfix: `++` `--` `!` `?`                     |
+| 11    | `a.b` `a(b)` `a[b]`                            |
+
+### Expression Types
+
+| Syntax                | Description                        | Inferred Type                                  |
+| --------------------- | ---------------------------------- | ---------------------------------------------- |
+| `123`                 | Integer literal                    | `int`                                          |
+| `10.5`                | Floating-point literal             | `f64`                                          |
+| `"text"`              | String literal                     | `string`                                       |
+| `'c'`                 | Character literal                  | `char`                                         |
+| `true`, `false`       | Boolean literal                    | `bool`                                         |
+| `null`                | Null literal                       | `null`                                         |
+| `identifier`          | Identifier reference               | (Depends on `identifier`'s type)               |
+| `.member`             | Implicit member access             | (Depends on `member`'s type)                   |
+| `accessed.member`     | Member access                      | (Depends on `member`'s type)                   |
+| `fun()`               | Function or method call            | (Depends on `fun`'s return type)               |
+| `arr[index]`          | Index access                       | (Depends on `arr`'s element type)              |
+| `(expr)`              | Parenthesized expression           | (Depends on `expr`'s type)                     |
+| `a + b`               | Binary expression                  |                                                |
+| `-x`                  | Prefix unary expression            | `typeof(x)`                                    |
+| `x++`                 | Postfix unary expression           | `typeof(x)`                                    |
+| `a ? b : c`           | Ternary expression                 | (Same as both `b` and `c`)                     |
+| `x as T`              | Cast expression                    | `T`                                            |
+| `throw expr`          | Throw expression                   | `Std.Types.Error`                              |
+| `new T(...)`          | Object construction                | `T` or `*T`                                    |
+| `match expr { ... }`  | Match expression                   | (Depends on case results)                      |
+| `{expr1, expr2, ...}` | Generic collection/type expression | Slice of common type of `expr1`, `expr2`, etc. |
+| `let T x` `let x`     | Local variable declaration         | `T` or inferred type                           |
+| `const T x` `const x` | Local constant declaration         | `T` or inferred type                           |
+
+---
 ## Data and Types
 
 tq is a strictly-typed language. It means that every data or object that
@@ -235,12 +334,13 @@ All the standard FP numbers are implemented following the [`IEEE 754`](https://e
 Here is the exaustive list of floating-point numeric types with their
 corresponding type in the C programming language:
 
-| Alias   | Equivalent in C |
-|---------|:---------------:|
-| f16     | n/a             |
-| f32     | float           |
-| f64     | double          |
-| f128    | n/a             |
+| Alias  | Equivalent in C |
+| ------ | :-------------: |
+| `f16`  |   `_Float16`    |
+| `f32`  |     `float`     |
+| `f64`  |    `double`     |
+| `f80`  |  `long double`  |
+| `f128` |   `_Float128`   |
 
 ---
 ### Boolean
@@ -371,6 +471,15 @@ void
 ```
 
 ---
+### Opaque
+
+Opaque is an abstract type used to represent an unknown-sized type.
+```tq
+#/// func scope ///
+opaque
+```
+
+---
 ### NoReturn
 
 NoReturn is an abstract type that is used to indicate that a function does not returns.
@@ -391,77 +500,93 @@ Examine with attention each one to understand exactly what is better for your ne
 :::
 
 ---
+### Collections
 #### Arrays
 
-Arrays (in tq, may also be called slices) are one of the most basic collection type in programming. It is based on the concept of a contiguous
-sequence of data in the memory that can be indexed by its offset from the origin of the array.
+Arrays are fixed-size collections that store multiple values of the same type in contiguous memory.
 
-Array types are delcared as follows:
-```tq
+An array owns its data, meaning all elements are stored directly inside the array itself. The array size is part of its type and cannot change after declaration.
+
+```text
 #/// func scope ///
-[]anytype
-```
-`[]` being a type modifier, indicating an array list of the following type
 
-| tq       | Size in bits       |
-|----------|:------------------:|
-| `[i]t`   | `bitSizeOf(t) * i` |
+let [5]i32 numbers = {10, 20, 30, 40, 50}
 
-*`t` - Type of elements \
-*`i` - Array list size
+const [_]string fruits = {
+    "orange",
+    "mango",
+    "strawberry",
+    "tomato"
+}
 
-Array lists are not implicitly allocated in memory. They need to be allocated with a predefined size and
-cannot be automatically resized after creation. 
-
-The array initialization syntax pre-allocates memory based on the length of the array which is
-mentioned between the array type modifier `[length]`, also ensuring that the array assigned to this variable
-will aways be of the explicited size. \
-e.g. the following code will create an array for the `i32` type with pre-allocated memory to only 5 elements of
-the `i32` type:
-```tq
-#/// func scope ///
-let [5]i32 myArray
-```
-
-Sometimes it is more convenient to just assign the elements to an array without counting how many elements it has.
-In that case, the compiler can figure out the length on its own. Hence, the following syntax is also valid:
-```tq
-#/// func scope ///
-# pay attention to the empty type modifier!
-let []i8 myArray = [values..]
-```
-
-If an lenght is provided, all or none of the elements' value must be defined.
-If none, all the elements will be initialized as default.
-
-Some ways of declaring array fields:
-```tq
-#/// func scope ///
-let [10]i32 myArray
-const fruits = ["orange", "mango", "strawberry", "tomato"]
 const [20]i8 myBytes
 ```
 
-#### The Index Operator
-To handle single values inside an array, it uses the index operator `[i]`.
+In the example above:
+`[5]i32` declares an array containing 5 elements of type `i32` \
+`[_]string` declares an array containing string values. It's length is inferred from the collection expression \
+`[20]i8` declares an array containing 20 bytes
 
-The index operator is declared putting a value surrounded by square brackets after the array indentifier.
-The declared value is the index, the position of the desired element on the list, starting from zero.
+Because arrays own their memory, copying an array also copies all of its elements.
 
-The index operator will return an element from the array, at the specified index, as follows:
+#### Slices
+
+Slices are lightweight references to contiguous portions of arrays.
+Unlike arrays, slices do not own their data. Instead, a slice provides a view into existing array memory.
+
+A slice can reference an entire array or only a portion of it.
+
+Because slices reference the original array memory, modifications made through a slice also affect the underlying array.
+
 ```tq
 #/// func scope ///
-let []i32 myArray = [10, 20, 30, 40, 50]
+
+let [5]i32 numbers = {10, 20, 30, 40, 50}
+
+let []i32 middle = numbers[1..4]
+
+middle[0] = 99
+
+Std.Console.writeln(numbers)
+# out: [10, 99, 30, 40, 50]
+```
+
+the example above:
+- `numbers[1..4]` creates a slice referencing the elements from index 1 up to 4
+- middle does not store copied values
+- changing `middle[0]` also changes the respective value in the original array
+
+Slices are commonly used to pass arrays efficiently without copying their contents.
+
+#### The index Operator
+The index operator `[i]` accesses individual elements inside arrays and slices.
+The index is written inside square brackets after the array or slice identifier. Indexes start at zero, where 0 represents the first element.
+The operator returns the element stored at the specified position.
+
+```tq
+#/// func scope ///
+
+let []i32 myArray = &{10, 20, 30, 40, 50}
+
 let i32 elementAt1 = myArray[1] # = 20
 let i32 elementAt2 = myArray[2] # = 30
+```
 
-# The index also works with variables
-# Any numeric integer data type can be used
-# as indexer!
+Variables can also be used as indexes.
+Any integer numeric type is valid as an index value.
+
+```tq
+#/// func scope ///
+
+let []i32 myArray = &{10, 20, 30, 40, 50}
+
 let i8 myIndex = 0
-Std.Console.writeln(myArray[myIndex]) # out: 10
+Std.Console.writeln(myArray[myIndex])
+# out: 10
+
 myIndex = 4
-Std.Console.writeln(myArray[myIndex]) # out: 50
+Std.Console.writeln(myArray[myIndex])
+# out: 50
 ```
 
 ---
@@ -537,7 +662,7 @@ func main() !void {
 ```
 
 ---
-#3## Stacks
+### Stacks
 :::not-implemented
 :::
 
