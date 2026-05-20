@@ -120,6 +120,7 @@ func ... {
 Expressions can be combined using operators to form larger expressions.
 
 ```tq
+#/// func scope ///
 10 + 5 * 20
 ```
 
@@ -130,10 +131,34 @@ then `10 + 100` is evaluated, resulting in `110`
 because expressions follow precedence and associativity rules similar to mathematics.
 
 ```tq
+#/// func scope ///
 Std.Console.writeln(10 + 5 * 20) # 110
 # Parenthesis xan be used to explicitly control the evaluation order
 Std.Console.writeln((10 + 5) * 20) # 300
 ```
+
+### Operators
+
+(`a`, `b` and `c` values are expression placeholders)
+
+| Operation   | Description                                                                             |
+| ----------- | --------------------------------------------------------------------------------------- |
+| `a = b`     | Assign the value of `b` to `a`                                                          |
+| `a += b`    | Checked dds the value of `a` to the value of `b`, then assigns the result to `a`        |
+| `a -= b`    | Checked subtracts the value of `a` to the value of `b` , then assigns the result to `a` |
+| `a *= b`    | Checked multiplies the value of `a` to the value of `b`, then assigns the result to `a` |
+| `a /= b`    | Divide towards 0 the value of `a` to the value of `b`, then assigns the result to `a`   |
+| `a %= b`    | Divides the value of `a` to the value of `b`, then assigns the reminder to `b`          |
+| `a ? b : c` | Returns `b` if `a` is true. If not, returns `c`                                         |
+| `a or b`    | Being `a` and `b` both booleans, returns `true` if any is true                          |
+| `a and b`   | Being `a` and `b` both booleans , teturns `true` If both are true                       |
+| `a + b`     | Checked add `a` with `b`. If the check fails, throws a fatal error                      |
+| `a +% b`    | Unchecked add `a` with `b`, allowing the result to overflow                             |
+| `a +\| b`   | Checked add `a` with `b`. If the check fails, clamps the result                         |
+| `a - b`     | Checked subtract `a` with `b`. If the check fails, throws a fatal error                 |
+| `a -% b`    | Unchecked subtract `a` with `b`, allowing the result to overflow                        |
+| `a -\| b`   | Checked subtract `a` with `b`. If the check fails, clamps the result                    |
+
 
 ### Operator Precedence
 
@@ -732,10 +757,15 @@ func ... {
 ```
 
 The structure `Biography` on the example have 3 fields, an integer `myAge` and two strings `myName` and `myGithub`.
-The resulting size of this structure, in memory, will be, *in most cases*, the sum of all fields  plus a aditional
-constant pointer that indicates it type in a global type table. This implicit data is important to allow the program
-to know the type of the structure anywhere during runtime.
+The resulting size of this structure, in memory, will be the sum of all fields' sizes plus any metadata that the compiler finds necessary to the program's work.
 
+ #### Functions and Methods
+
+Structures can contain member functions that execute within the structure's context. those functions have access to all the structure's members alongside non-private inherited members.
+
+member functions can be implemented as the same as normal functions inside the structure boundaries. Those functions are only accessible though a instance instance of the structure.
+
+It is also possible to implement functions inside the structure context that cannot be called from the instance, needing to be referred using the type name itself, so called static functions. To define a function as static, use the attribute `@static`.
 #### Constructors
 
 Sometimes, it is usefull to have a single function to abstract complex initialization of data.
@@ -844,13 +874,7 @@ struct Biography {
 
 ```
 
-#### Static Functions and Methods
-
-Structures can contain member functions that execute within the structure's context. those functions have access to all the structure's members and non-private extended members.
-
-member functions can be implemented as the same as normal functions inside the structure boundaries. Those functions are only accessible though a structure instance.
-
-It is also possible to implement functions inside the structure context that cannot be called from the instance, needing to be refered using the type name itself, so called static functions. To define a function as static, use the attribute `@static`.
+#### Static
 
 <details>
 <summary>Packets</summary>
@@ -981,12 +1005,11 @@ It is also possible to implement functions inside the structure context that can
     :::under-construction
     :::
 
-    Unions are usefull data structures that stores each one of it fields in the same
-    memory space. It can be used to diferent purposes, such as storing diferent types
-    in the same space or reading the same bits as another type.
+    Unions are usefull data structures that stores each one of it fields in the same overlaping memory space. It can be used to diferent purposes, such as storing diferent types
+    in the same space or reinterpreting the same memory as another type.
 
+To define an union, use the `@union` attribute in any struct.
 
-    You can declarate an union at the following way:
     ```tq
     @union struct ContactMethod {
         let PhoneNumber phone
@@ -996,6 +1019,7 @@ It is also possible to implement functions inside the structure context that can
     ```
 
     Unions, by default, are tagged.
+     Access them in an unsafe context for avoiding tag check or use packets to manually define tag-free unions.
 </details>
 
 <details>
@@ -1039,7 +1063,6 @@ It is also possible to implement functions inside the structure context that can
 Type definitions, or typedefs, are a powerfull way to declarate primitive-like types
 with custom rules and behavior.
 
----
 #### Declarting Typedefs
 
 To declarate a typedef, you can do:
@@ -1065,7 +1088,6 @@ that type.
 Any type that is not an integer will ask for a compile-time defined value for
 each value entry.
 
----
 #### Defining Entries
 
 There are two kinds of entries that can fit in a typedef: numericals and named entries.
