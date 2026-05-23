@@ -109,10 +109,10 @@ func ... {
 	
 	# Local variables are expressions too!
 	let collection = {5, 10, 20}.repeat(10 * 10)
+	# Number literal  ^  ^^  ^^         ^^   ^^
+	# Operation                         ^^^^^^^
 	# collection     ^^^^^^^^^^^
 	# access         ^^^^^^^^^^^^^^^^^^
-	# Number literal                    ^^   ^^
-	# Operation                         ^^^^^^^
 	# function call  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
 ```
@@ -141,23 +141,60 @@ Std.Console.writeln((10 + 5) * 20) # 300
 
 (`a`, `b` and `c` values are expression placeholders)
 
-| Operation   | Description                                                                             |
-| ----------- | --------------------------------------------------------------------------------------- |
-| `a = b`     | Assign the value of `b` to `a`                                                          |
-| `a += b`    | Checked dds the value of `a` to the value of `b`, then assigns the result to `a`        |
-| `a -= b`    | Checked subtracts the value of `a` to the value of `b` , then assigns the result to `a` |
-| `a *= b`    | Checked multiplies the value of `a` to the value of `b`, then assigns the result to `a` |
-| `a /= b`    | Divide towards 0 the value of `a` to the value of `b`, then assigns the result to `a`   |
-| `a %= b`    | Divides the value of `a` to the value of `b`, then assigns the reminder to `b`          |
-| `a ? b : c` | Returns `b` if `a` is true. If not, returns `c`                                         |
-| `a or b`    | Being `a` and `b` both booleans, returns `true` if any is true                          |
-| `a and b`   | Being `a` and `b` both booleans , teturns `true` If both are true                       |
-| `a + b`     | Checked add `a` with `b`. If the check fails, throws a fatal error                      |
-| `a +% b`    | Unchecked add `a` with `b`, allowing the result to overflow                             |
-| `a +\| b`   | Checked add `a` with `b`. If the check fails, clamps the result                         |
-| `a - b`     | Checked subtract `a` with `b`. If the check fails, throws a fatal error                 |
-| `a -% b`    | Unchecked subtract `a` with `b`, allowing the result to overflow                        |
-| `a -\| b`   | Checked subtract `a` with `b`. If the check fails, clamps the result                    |
+| Operation   | Description                                                                  |
+|-------------|------------------------------------------------------------------------------|
+| `a = b`     | Assign the value of `b` to `a`                                               |
+| `a += b`    | Checked adds the value of `b` to `a`, then assigns the result to `a`         |
+| `a -= b`    | Checked subtracts the value of `b` from `a`, then assigns the result to `a`  |
+| `a *= b`    | Checked multiplies the value of `a` by `b`, then assigns the result to `a`   |
+| `a /= b`    | Divides the value of `a` by `b` towards zero, then assigns the result to `a` |
+| `a %= b`    | Divides the value of `a` by `b`, then assigns the remainder to `a`           |
+| `a ? b : c` | Returns `b` if `a` is true; otherwise returns `c`                            |
+| `a or b`    | Returns `true` if at least one is true                                       |
+| `a and b`   | Returns `true` if both are true                                              |
+| `a + b`     | Checked addition. Throws error on overflow                                   |
+| `a +% b`    | Unchecked addition (overflow allowed)                                        |
+| `a +\| b`   | Checked addition with clamp on overflow                                      |
+| `a - b`     | Checked subtraction. Throws error on overflow                                |
+| `a -% b`    | Unchecked subtraction (overflow allowed)                                     |
+| `a -\| b`   | Checked subtraction with clamp                                               |
+| `a * b`     | Checked multiplication. Throws error on overflow                             |
+| `a *% b`    | Unchecked multiplication (overflow allowed)                                  |
+| `a *\| b`   | Checked multiplication with clamp                                            |
+| `a / b`     | Division                                                                     |
+| `a /_ b`    | Division rounding toward zero                                                |
+| `a /^ b`    | Division rounding away from zero                                             |
+| `a % b`     | Remainder                                                                    |
+| `a ** b`    | Power                                                                        |
+| `a == b`    | Equality                                                                     |
+| `a != b`    | Inequality                                                                   |
+| `a === b`   | Strict equality                                                              |
+| `a !== b`   | Strict inequality                                                            |
+| `a < b`     | Less than                                                                    |
+| `a > b`     | Greater than                                                                 |
+| `a <= b`    | Less or equal                                                                |
+| `a >= b`    | Greater or equal                                                             |
+| `a & b`     | Bitwise AND                                                                  |
+| `a ^ b`     | Bitwise XOR                                                                  |
+| `a << b`    | Left shift                                                                   |
+| `a >> b`    | Right shift                                                                  |
+| `a as T`    | Type cast                                                                    |
+| `+a`        | Unary plus                                                                   |
+| `-a`        | Unary negation                                                               |
+| `*a`        | Dereference                                                                  |
+| `&a`        | Reference/address                                                            |
+| `~a`        | Bitwise NOT                                                                  |
+| `!a`        | Logical NOT                                                                  |
+| `?a`        | Nullable/test operator                                                       |
+| `++a`       | Prefix increment                                                             |
+| `--a`       | Prefix decrement                                                             |
+| `a++`       | Postfix increment                                                            |
+| `a--`       | Postfix decrement                                                            |
+| `a!`        | Assert non-null / force unwrap                                               |
+| `a?`        | Safe unwrap / optional access                                                |
+| `a.b`       | Member access                                                                |
+| `a(b)`      | Function call                                                                |
+| `a[b]`      | Index access                                                                 |
 
 
 ### Operator Precedence
@@ -205,6 +242,28 @@ From lowest precedence to highest precedence.
 | `{expr1, expr2, ...}` | Generic collection/type expression | Slice of common type of `expr1`, `expr2`, etc. |
 | `let T x` `let x`     | Local variable declaration         | `T` or inferred type                           |
 | `const T x` `const x` | Local constant declaration         | `T` or inferred type                           |
+
+<details>
+<sumary>Technical specifications</sumary>
+
+Operations with same precedence are evaluated in left to right order.
+
+```tq
+let int global = 1
+
+func fun() int {
+	global *= 2
+	return global
+}
+
+func main() !void {
+	let x = global + fun() + fun()
+}
+```
+
+The value of `x` must aways be `7` 
+
+</details>
 
 ---
 ## Data and Types
@@ -279,36 +338,33 @@ Bellow, there is a list o the language's built-in types.
 ---
 ### Integer
 
-The most simple way of representing numbers is with integers. Integers
-represents an always complete (non-fractional) value, never allowing
-any decimal point.
+The simplest way of representing numbers is with integers. Integers
+represent whole (non-fractional) values and do not allow decimal points.
 
-For historical, computational and memory optimal reasons, the computer gives
-an extensive range of possibilities for numeric integer types.
+For historical, computational, and memory-efficiency reasons, computers
+provide a wide range of integer types.
 
-To declare an integer type in the tq Language, use the low-case
-letter `i` or `u` to declare the kind of the integer (signed or unsigned
-respectively) and a number to declare the size, in bits, that this data
-will occupy in memory.
+To declare an integer type in the TQ language, use the lowercase letter
+`i` or `u` to define the sign (signed or unsigned respectively), followed
+by a number that defines the bit width of the type.
 
 Examples of valid integer types are:
 ```pseudo
-i8   # signed 8-bit (1 byte) integer
-u16  # unsigned 16-bit (2 bytes) integer
-i128 # signed 128-bit (16 bytes)integer
-u256 # unsigned 256-bit (32 bytes) integer
-i1   # signed single bit (0 or -1)
+i8    # signed 8-bit (1 byte) integer
+u16   # unsigned 16-bit (2 bytes) integer
+i128  # signed 128-bit (16 bytes) integer
+u256  # unsigned 256-bit (32 bytes) integer
+i1    # signed single-bit integer (-1 or 0)
 ```
 
-The size in bits must be a integer inside the range of 1 to 256.
+The bit width must be an integer in the range of 1 to 256.
 
 :::info[Although,]
-it is reccomended to avoid bit lengths that are not a power
-of two greater or equal than 8 (8, 16, 32, 64, 128, etc.).
-Most real machines will peform calculations faster in this range as
-the effort to convert the value from and to the defined alignment is
-lower. \
-More about it will be covered in [alignment](/docs/language/language_reference#data-alignment).
+Although it is recommended to avoid bit widths that are not a power
+of two greater than or equal to 8 (8, 16, 32, 64, 128, etc.), most
+real machines perform better with these sizes due to natural CPU
+alignment. \
+More about this will be covered in [alignment](/docs/language/language_reference#data-alignment).
 :::
 
 The following non-exaustive table shows some common integer types and
@@ -316,23 +372,25 @@ its corresponding type in the C programming language:
 
 | Alias          | Equivalent in C | Size                  | Range                           |
 |----------------|:---------------:|:---------------------:|:-------------------------------:|
-| `i8`           | int8_t          | 8-bits                | -128 to 127                     |
-| `i16`          | int16_t         | 16-bits               | -32,768 to 32,767               |
-| `i32`          | int32_t         | 32-bits               | -2,147,483,648 to 2,147,483,647 |
-| `i64`          | int64_t         | 64-bits               | -9.2x10¹⁸ to 9.2x10¹⁸           |
-| `int`          | size_t          | (target word size)    | (target word range)             |
-| `iptr`         | intptr_t        | (target pointer size) | (target pointer range)          |
-| `u8`           | uint8_t         | 8-bits                | 0 to 255                        |
-| `u16`          | uint16_t        | 16-bits               | 0 to 65,535                     |
-| `u32`          | uint32_t        | 32-bits               | 0 to 4,294,967,295              |
-| `u64`          | uint64_t        | 64-bits               | 0 to 1.8x10¹⁹                   |
-| `uint`         | usize_t         | (target word size)    | (target word range)             |
-| `uptr`         | uintptr_t       | (target pointer size) | (target pointer range)          |
-| `byte`         | char            | (target byte size)    | (target byte range)             |
+| `i8`           | `int8_t`        | 8-bits                | -128 to 127                     |
+| `i16`          | `int16_t`       | 16-bits               | -32,768 to 32,767               |
+| `i32`          | `int32_t`       | 32-bits               | -2,147,483,648 to 2,147,483,647 |
+| `i64`          | `int64_t`       | 64-bits               | -9.2x10¹⁸ to 9.2x10¹⁸           |
+| `int`          | `size_t`*       | (target word size)    | (target word range)             |
+| `iptr`         | `intptr_t`      | (target pointer size) | (target pointer range)          |
+| `u8`           | `uint8_t`       | 8-bits                | 0 to 255                        |
+| `u16`          | `uint16_t`      | 16-bits               | 0 to 65,535                     |
+| `u32`          | `uint32_t`      | 32-bits               | 0 to 4,294,967,295              |
+| `u64`          | `uint64_t`      | 64-bits               | 0 to 1.8x10¹⁹                   |
+| `uint`         | `usize_t`*      | (target word size)    | (target word range)             |
+| `uptr`         | `uintptr_t`     | (target pointer size) | (target pointer range)          |
+| `byte`         | `char`          | (target byte size)    | (target byte range)             |
+(* - Platform-dependent alias (word-size integer type))
 
-The `int`, `uint`, `iptr` and `uptr` types are special integers that are defined
-by the target. `int` and `uint` are the size of the machine's word (aka the integer size that the
-CPU can handle naturally) and `iptr` and `uptr` are the minimum size needed to store the numeric
+The `int`, `uint`, `iptr`, `uptr` and `byte` types are special integers that are defined
+by the target. ``byte` is the [byte size](https://en.wikipedia.org/wiki/Byte) of the machine.
+`int` and `uint` are the size of the machine's word (aka the integer size that the CPU can
+handle naturally) and `iptr` and `uptr` are the minimum size needed to store the numeric
 representation of any pointer, being equal or diferent of `int`/`uint` depending on the
 architecture.
 
@@ -546,9 +604,8 @@ Arrays are fixed-size collections that store multiple values of the same type in
 An array owns its data, meaning all elements are stored directly inside the array itself. The array size is part
 of its type and cannot change after declaration.
 
-```text
+```tq
 #/// func scope ///
-
 let [5]i32 numbers = {10, 20, 30, 40, 50}
 
 const [_]string fruits = {
@@ -579,7 +636,6 @@ Because slices reference the original array memory, modifications made through a
 
 ```tq
 #/// func scope ///
-
 let [5]i32 numbers = {10, 20, 30, 40, 50}
 
 let []i32 middle = numbers[1..4]
@@ -605,7 +661,6 @@ The operator returns the element stored at the specified position.
 
 ```tq
 #/// func scope ///
-
 let []i32 myArray = &{10, 20, 30, 40, 50}
 
 let i32 elementAt1 = myArray[1] # = 20
@@ -617,7 +672,6 @@ Any integer numeric type is valid as an index value.
 
 ```tq
 #/// func scope ///
-
 let []i32 myArray = &{10, 20, 30, 40, 50}
 
 let i8 myIndex = 0
@@ -760,7 +814,7 @@ struct Biography {
 
 func ... {
 	# this is creating a new variable of type Biography!
-	let Biography myBio = new Biography()
+	let myBio = new Biography()
 
 	myBio.myAge = 17
 	myBio.myName = "Camila"
@@ -796,7 +850,7 @@ To initialize this structure, the following code:
 ```tq
 #/// func scope ///
 # Declarating the variable and creating the instance...
-let Biography myBio = new Biography()
+let myBio = new Biography()
 # Defining the initial data ...
 myBio.name = "Camila"
 myBio.github = "lumi2021"
@@ -808,7 +862,7 @@ Or use the inline constructor to do it:
 ```tq
 # Declarating the variable, creating the instance
 # and defining the initial data ...
-let Biography myBio = new Biography() {
+let myBio = new Biography() {
 	myBio.name = "Camila"
 	myBio.github = "lumi2021"
 	myBio.age = 17
@@ -873,7 +927,7 @@ from Std.Mem import
 
 struct Biography {
 	...
-	@static create(string name, string gh, string age) *Biography {
+	@static func create(string name, string gh, string age) *Biography {
 		let newBio = alloc(Biography)
 
 		newBio.name = name
@@ -1036,35 +1090,60 @@ To define an union, use the `@union` attribute in any struct.
 </details>
 
 <details>
-<summary>OOP</summary>
+<summary>Data-Oriented Object Orientation</summary>
 
-    #### Object Orientation
-    :::under-construction
-    :::
+Although TQ is primarily a procedural language, object-oriented patterns can be achieved
+using `structs` and function composition.
 
-    Object-Oriended Programming in a programming paradigm that uses objects concept to develop programs.
-    Even tq being mainly based on procedural programming paradigm, Object-Orientation can be implemented
-    using structures.
+In TQ, an object is represented by a `struct` that holds data (fields) and can be associated
+with functions (methods).
 
-    In OOP, a object is refered as a structure that includes fields and precesses, like functions. Also,
-    the object-orientation have 3 important concepts that objects need to be able to follow.
+The object model in TQ is intentionally lightweight and avoids strict class hierarchies,
+favoring simplicity and composition over complex abstraction systems.
 
-    ---
-    #### Structures and Classes
+---
 
-    ---
-    #### Manipulating Structures as References
+### Structures
 
-    ---
-    #### Structure Inheritance
+TQ does not have classes. Instead, `structs` are used as the primary data abstraction unit.
+Structs can define data and behavior, the same way as classes can also do.
 
-    ---
-    #### Structure Encapsulation
+---
 
-    ---
-    #### Structure Polymorfism
+### References
 
+Structs can be passed by reference, allowing shared state and enabling object-like behavior
+without requiring class-based encapsulation models.
 
+---
+
+### Inheritance (Optional Structural Extension)
+
+TQ supports structural inheritance, allowing a struct to extend another struct and reuse its fields.
+Inheritance is kept simple and shallow to avoid complex hierarchy trees, allowing only one extension per struct.
+
+---
+
+### Encapsulation
+
+Encapsulation is achieved through visibility rules, controlling access to fields and functions
+associated with a struct.
+
+---
+
+### Interfaces
+
+Interfaces in TQ are defined using `structs` annotated with the `@interface` attribute.
+They describe a minimal set of required fields and functions that a struct must implement.
+Interfaces are designed to be lightweight and avoid forcing large abstraction hierarchies.
+
+---
+
+### Polymorphism
+
+Polymorphism is achieved through references to structs that implement the same interface
+or extends the same types.
+This allows different struct implementations to be used interchangeably.
 </details>
 
 ---
