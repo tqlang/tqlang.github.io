@@ -385,10 +385,11 @@ its corresponding type in the C programming language:
 | `uint`         | `usize_t`*      | (target word size)    | (target word range)             |
 | `uptr`         | `uintptr_t`     | (target pointer size) | (target pointer range)          |
 | `byte`         | `char`          | (target byte size)    | (target byte range)             |
+
 (* - Platform-dependent alias (word-size integer type))
 
 The `int`, `uint`, `iptr`, `uptr` and `byte` types are special integers that are defined
-by the target. ``byte` is the [byte size](https://en.wikipedia.org/wiki/Byte) of the machine.
+by the target. `byte` is the [byte size](https://en.wikipedia.org/wiki/Byte) of the machine.
 `int` and `uint` are the size of the machine's word (aka the integer size that the CPU can
 handle naturally) and `iptr` and `uptr` are the minimum size needed to store the numeric
 representation of any pointer, being equal or diferent of `int`/`uint` depending on the
