@@ -18,7 +18,12 @@ const config: Config = {
   projectName: 'tq',
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'throw',
+      onBrokenMarkdownImages: 'throw',
+    }
+  },
 
   i18n: {
     defaultLocale: 'en',

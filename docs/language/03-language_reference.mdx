@@ -1,6 +1,6 @@
 # Language reference
 
-## Basic Scripting Patterns
+## Lexing, Syntax and Good Practices
 
 ### Whitespace
 
@@ -8,6 +8,38 @@ In tq, padding can be done with spaces (` `) or tabs (`\t`).
 However, we want to ensure a standard pattern of use tabs instead of
 spaces as the use of the tab character is aways better for cases of
 acessibility, slightly reduction in source code size and user size preference.
+
+---
+### keywords
+
+| Keyword    | Purpose                                                                                                                  |
+|:----------:|:-------------------------------------------------------------------------------------------------------------------------|
+| `from`     | Defines a `from ... import` statement. See [Importing modules and namespaces](#importing-modules-and-namespaces)         |
+| `import`   | Used in the `from ... import` statement. See [Importing modules and namespaces](#importing-modules-and-namespaces)       |
+| `let`      | Defines a variable value field                                                                                           |
+| `const`    | Defines a constant value field                                                                                           |
+| `func`     | Defines a function. See [functions](#functions)                                                                          |
+| `struct`   | Defines a structure. See [structures](#structures)                                                                       |
+| `typedef`  | Defines a typedef. See [typedefs](#typedefs)                                                                             |
+| `if`       | Defines a conditional if statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                             |
+| `elif`     | Defines a conditional elif statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                           |
+| `else`     | Defines an else statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                                      |
+| `for`      | Defines a for loop statement. See [for loops](#for-loops)                                                                |
+| `while`    | Defines a while loop statement. See [while loops](#while-loops)                                                          |
+| `match`    | Defines a value matching expression. See [match](#match)                                                                 |
+| `new`      | Creates an object's instance. See [structures](#structures)                                                              |
+| `async`    | Marks a async function call as asyncronous. See [async](#async)                                                          |
+| `await`    | Marks a async function call as syncronous. See [async](#async)                                                           |
+| `label`    | Declares a label or indicates a label type. See [labels](#labels)                                                        |
+| `goto`     | Performs an unsafe jump. See [labels](#labels)                                                                           |
+| `try`      | Makes the called function automatically throw up any error. See [errors](#errors)                                        |
+| `catch`    | Captures and handles an error returned by a function. See [errors](#errors)                                              |
+| `throw`    | Makes the function return an error. See [errors](#errors)                                                                |
+| `destroy`  | Destroys an object and performs it cleanup process                                                                       |
+| `defer`    | Execute code right before the function's return. See [defer & errdefer](#defer--errdefer)                                |
+| `errdefer` | Execute code right before the function's error return. See [defer & errdefer](#defer--errdefer)                          |
+| `unsafe`   | Execute code in an unchecked context. See [unsafe](#unsafe)                                                              |
+
 
 ---
 ### Statements and Line Breaks
@@ -51,39 +83,7 @@ write("Hello, "); write("World!"); write("\n")
 ```
 
 ---
-### Comments
-
-Comments are a special syntax resource that allows a section in the script
-to not be included as executeable code. \
-Most of it uses includes documentation or fast activation/deactivation of
-lines or blocks of code.
-
-#### Single line comments
-
-The `#` character can be used to declare the section of a line on its right
-as a comment.
-```tq
-#/// func scope ///
-# I am a comment!
-IAm.executeable() # Me too!
-```
-
-#### Multi-line comments
-
-Enclose a section or chunk of lines with `###` to declare it as a multi-lined
-comment.
-```tq
-#/// func scope ///
-IAm.executeable()
-###
-	I am a comment!
-	Me too!
-###
-```
-
----
-
-## Expressions
+### Expressions
 
 Expressions are textual rrepresentations of values or operations.
 
@@ -137,7 +137,7 @@ Std.Console.writeln(10 + 5 * 20) # 110
 Std.Console.writeln((10 + 5) * 20) # 300
 ```
 
-### Operators
+#### Operators
 
 (`a`, `b` and `c` values are expression placeholders)
 
@@ -158,9 +158,29 @@ Std.Console.writeln((10 + 5) * 20) # 300
 | `a - b`     | Checked subtract `a` with `b`. If the check fails, throws a fatal error                 |
 | `a -% b`    | Unchecked subtract `a` with `b`, allowing the result to overflow                        |
 | `a -\| b`   | Checked subtract `a` with `b`. If the check fails, clamps the result                    |
+| `a * b`     | Checked multiplies `a` with `b`. If the check fails, throws a fatal error               |
+| `a *% b`    | Unchecked multiplies `a` with `b`, allowing the result to overflow                      |
+| `a *\| b`   | Checked multiplies `a` with `b`. If the check fails, clamps the result                  |
+| `a / b`     | Being `a`and `b` integers, performs checked exact division. Otherwise, performs division towards 0 |
+| `a /_ b`    | Divides `a` with `b`, rounding to floor                                                 |
+| `a /^ b`    | Divides `a` with `b`, rounding to ceil                                                  |
+| `a /^ b`    | Divides `a` with `b`, rounding to ceil                                                  |
+| `a % b`     | Divides `a` with `b`, returning the remainder                                           |
+| `a ** b`    | Checked powers `a` to the expoent `b`. If the check fails, throws a fatal error         |
+| `a == b`    | Checks if the value of `a` is equals to the value of `b`                                |
+| `a != b`    | Checks if the value of `a` is diferent to the value of `b`                              |
+| `a === b`   | Checks if the reference of `a` is equals to the reference of `b`                        |
+| `a !== b`   | Checks if the reference of `a` is diferent of the reference of `b`                      |
+| `a < b`     | Checks if the value of `a` is lesser than the value of `b`                              |
+| `a > b`     | Checks if the value of `a` is greater than the value of `b`                             |
+| `a <= b`    | Checks if the value of `a` is lesser or equals than the value of `b`                    |
+| `a >= b`    | Checks if the value of `a` is greater or equals than the value of `b`                   |
+| `a AND b`   | Returns the bitwise operation `a AND B`                                                 |
+| `a OR b`    | Returns the bitwise operation `a OR B`                                                  |
+| `a XOR b`   | Returns the bitwise operation `a XOR B`                                                 |
+| `a as b`    | Being `b` a type, performs the explicit cast of `a` to type `b`                         |
 
-
-### Operator Precedence
+#### Operator Precedence
 
 From lowest precedence to highest precedence.
 
@@ -172,13 +192,13 @@ From lowest precedence to highest precedence.
 | 4     | `+`  `+%` `+\|` `-` `-%` `-\|`                 |
 | 5     | `*` `*%` `*\|` `/` `/_` `/^` `%` `**`          |
 | 6     | `==` `!=` `===` `!==` `<` `>` `<=` `>=`        |
-| 7     | `&` `^` `<<` `>>`                              |
+| 7     | `AND` `OR` `XOR` `<<` `>>`                     |
 | 8     | `as`                                           |
 | 9     | Prefix: `+` `-` `*`  `&` `~` `!` `?` `++` `--` |
 | 10    | Postfix: `++` `--` `!` `?`                     |
 | 11    | `a.b` `a(b)` `a[b]`                            |
 
-### Expression Types
+#### Expression Types
 
 | Syntax                | Description                        | Inferred Type                                  |
 | --------------------- | ---------------------------------- | ---------------------------------------------- |
@@ -205,6 +225,37 @@ From lowest precedence to highest precedence.
 | `{expr1, expr2, ...}` | Generic collection/type expression | Slice of common type of `expr1`, `expr2`, etc. |
 | `let T x` `let x`     | Local variable declaration         | `T` or inferred type                           |
 | `const T x` `const x` | Local constant declaration         | `T` or inferred type                           |
+
+---
+### Comments
+
+Comments are a special syntax resource that allows a section in the script
+to not be included as executeable code. \
+Most of it uses includes documentation or fast activation/deactivation of
+lines or blocks of code.
+
+#### Single line comments
+
+The `#` character can be used to declare the section of a line on its right
+as a comment.
+```tq
+#/// func scope ///
+# I am a comment!
+IAm.executeable() # Me too!
+```
+
+#### Multi-line comments
+
+Enclose a section or chunk of lines with `###` to declare it as a multi-lined
+comment.
+```tq
+#/// func scope ///
+IAm.executeable()
+###
+	I am a comment!
+	Me too!
+###
+```
 
 ---
 ## Data and Types
@@ -873,7 +924,7 @@ from Std.Mem import
 
 struct Biography {
 	...
-	@static create(string name, string gh, string age) *Biography {
+	@static func create(string name, string gh, string age) *Biography {
 		let newBio = alloc(Biography)
 
 		newBio.name = name
@@ -983,7 +1034,7 @@ struct Biography {
         - name:     80 .. 120
         - index:    120 .. 256
     ###
-    @packed struct TablePage {
+    @public @packed struct TablePage {
         @lay(..32) 							# Define field inside range 0x0 and 0x4
         let Tag tag
         let bool active                     # alignment of 1-bits
@@ -1590,7 +1641,7 @@ Conditionals are a important aspect of a program, allowing it to do specific beh
 
 The language have 4 main kinds of conditional checking: `if`, `elif` and `else` statements and `match` expressions.
 
-#### if, elif and else blocks
+### if, elif and else blocks
 
 `if`, `elif` and `else` are the most basic conditional statement.
 
@@ -1682,11 +1733,9 @@ else {
 
 ```
 
-#### Match
-:::not-implemented
-:::
+### Match
 
-Value match expressions are great ways to simplify (and very often, optimize) long if-else blocks.
+Value matching expressions are great ways to simplify (and very often, optimize) long if-else blocks.
 A match expression will test a value against diferent values or conditions and conditionally execute
 the code of the matched option. If no valid option matches the provided value, it will fall into a
 default fallback option if provided.
@@ -1856,6 +1905,11 @@ func ... {
 ```
 
 ---
+## Defer & ErrDefer
+:::under-construction
+:::
+
+---
 ## Labels
 :::under-construction
 :::
@@ -1887,7 +1941,7 @@ label body:
 }
 label check:
 {
-	if (i < 50) goto body
+	if (i < 50) unsafe goto body
 }
 ```
 
@@ -1896,13 +1950,13 @@ or manually perform conditional branching
 ```tq
 #/// func scope ///
 
-if (choise == 'A') goto if_option_a
-else goto if_option_b
+if (choise == 'A') unsafe goto if_option_a
+else unsafe goto if_option_b
 
 label if_option_a:
 {
 	Std.Console.writeln("Option A")
-	goto end
+	unsafe goto end
 }
 label if_option_b:
 {
@@ -1918,17 +1972,29 @@ Those examples are not real use cases and must not be replicated in real code.
 Aways prefer the language's built in statements when possible
 :::
 
-### 
-
 ---
-## Namespaces
+## Unsafe
 
 :::under-construction
 :::
 
-Namespaces are a resource used for organization and encapsulation, used to divide the project into small blocks and provide an aditional layer of safety when it comes to naming conflicts.
+---
+## Async
 
-A namespace represents a logical group of individual identifiers, organized in a hieraquical order. Identifiers inside namespaces can be refered relatively to a scope or globally, with fully-qualified identifiers.
+:::under-construction
+:::
+
+
+---
+## Namespaces
+
+Namespaces are a resource used for organization and encapsulation, used to divide the
+project into small blocks and provide an aditional layer of safety when it comes to
+naming conflicts.
+
+A namespace represents a logical group of individual identifiers, organized in a
+hieraquical order. Identifiers inside namespaces can be refered relatively to a scope
+or globally, with fully-qualified identifiers.
 
 imagine the following namespace organization:
 
@@ -1955,16 +2021,18 @@ However, in another module, the reference must be fully qualified this way:
 from Std.Math.Vector import { Point }
 ```
 
-### Structuring Namespaced
+### Structuring Namespaces
 
 In tq, namespace generation is based entirely on directory structure.
 
-Every namespace is genersted based in a directury. Subdirectories generates neasted namespaces.
+Every namespace is genersted based in a directury. Subdirectories generates
+neasted namespaces.
 
 Files are ignored and their content is put directly inside the parent namespace.
 
-The concept of this system is designed to allow maximum flexibility with namespace design and organization,
-also helping with organization and auto-documentation.
+The concept of this system is designed to allow maximum flexibility with
+namespace design and organization, also helping with organization and 
+uto-documentation.
 
 Let's take the following project folder as a example:
 ```dir

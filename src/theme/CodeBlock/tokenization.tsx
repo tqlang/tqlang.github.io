@@ -663,24 +663,29 @@ function analyze_expression_tokens(ctx: AnalyzerContext) {
                 case 'destroy':
                 case 'label':
                 case 'goto':
+                case 'unsafe':
                     ctx.tokens[ctx.index++].kind = TokenKind.keyword;
                     return;
                     
                 case 'bool':
                 case 'byte':
-                case 'void':
                 case 'char':
                 case 'string':
-                case 'noreturn':
                 case 'f16':
                 case 'f32':
                 case 'f64':
                 case 'f128':
+                                            
+                case 'void':
+                case 'opaque':
+                case 'noreturn':
                     ctx.tokens[ctx.index++].kind = TokenKind.type;
                     return;
-                    
+                
                 case 'true':
                 case 'false':
+                case 'null':
+                case 'undefined':
                     ctx.tokens[ctx.index++].kind = TokenKind.boolean;
                     return;
                     
