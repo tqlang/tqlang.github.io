@@ -4,7 +4,49 @@ sidebar_position: 1
 
 # Introduction
 
-:::under-construction
-:::
+## Language Philosophy
 
-// TODO //
+Tq is a modern systems programming language focused on explicit control, predictable behavior and practical safety.
+The language is designed around the idea that low-level programming should not require sacrificing readability or maintainability, but also should not hide important runtime or memory behavior behind implicit abstractions.
+
+**tq follows a “safe-by-default” philosophy:**
+
+- values and references are assumed to be valid and accessible unless explicitly marked otherwise
+- runtime safety guards help detect invalid operations during execution
+- unsafe contexts allow the programmer to explicitly disable safety mechanisms when performance or low-level control is required
+
+Unlike fully managed languages, tq does not rely on a traditional garbage collector. Memory management is deterministic and based on ownership and lifetime analysis, allowing resources to be released automatically whenever possible while still preserving manual control.
+
+**The language aims to provide:**
+
+- Predictable memory behavior
+- Explicit ownership semantics
+- Strong runtime safety guarantees
+- Low runtime overhead
+- Precise control over memory layout and data representation
+- Portable systems-level abstractions
+
+Tq avoids implicit heap allocation, hidden control flow and invisible runtime costs whenever possible. Abstractions are expected to have costs proportional to what they appear to do.
+Rather than enforcing complete compile-time verification for every possible memory scenario, tq combines compile-time analysis with optional runtime validation. This allows the language to remain expressive and practical without requiring complex borrowing systems or heavy annotation models.
+
+**The language is especially suited for:**
+
+- Systems programming
+- Game development
+- Embedded software
+- Performance-sensitive applications
+- Tooling and infrastructure software
+- Runtime and virtual machine development
+
+Tq is designed to give programmers direct access to machine-level behavior while still providing modern tooling and safety mechanisms to reduce common classes of programming errors.
+
+Other application domains in tq are implemented as semantic layers rather than built-in language modes.
+
+## Design Priorities
+
+1. Predictability over implicit behavior
+2. Explicit control over hidden automation
+3. Safety mechanisms that can be reasoned about
+4. Deterministic resource management
+5. Portable low-level programming
+6. Readable systems-level abstractions
