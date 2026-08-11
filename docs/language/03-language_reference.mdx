@@ -12,32 +12,33 @@ acessibility, slightly reduction in source code size and user size preference.
 ---
 ### keywords
 
-|  Keyword   | Purpose                                                                                                          |
-| :--------: | :--------------------------------------------------------------------------------------------------------------- |
-|   `from`   | Defines a `from ... import` statement. See [Importing modules and namespaces](#importing-modules-and-namespaces) |
-|   `let`    | Defines a variable value field                                                                                   |
-|  `const`   | Defines a constant value field                                                                                   |
-|   `func`   | Defines a function. See [functions](#functions)                                                                  |
-|  `struct`  | Defines a structure. See [structures](#structures)                                                               |
-| `typedef`  | Defines a typedef. See [typedefs](#typedefs)                                                                     |
-|    `if`    | Defines a conditional if statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                     |
-|   `elif`   | Defines a conditional elif statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                   |
-|   `else`   | Defines an else statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                              |
-|   `for`    | Defines a for loop statement. See [for loops](#for-loops)                                                        |
-|  `while`   | Defines a while loop statement. See [while loops](#while-loops)                                                  |
-|  `match`   | Defines a value matching expression. See [match](#match)                                                         |
-|   `new`    | Initializes an object's instance. See [structures](#structures)                                                  |
-|  `async`   | Marks a async function call as asyncronous. See [async](#async)                                                  |
-|  `await`   | Marks a async function call as syncronous. See [async](#async)                                                   |
-|  `label`   | Declares a label or indicates a label type. See [labels](#labels)                                                |
-|   `try`    | Makes the called function automatically throw up any error. See [errors](#errors)                                |
-|  `catch`   | Captures and handles an error returned by a function. See [errors](#errors)                                      |
-|  `throw`   | Makes the function return an error. See [errors](#errors)                                                        |
-| `destroy`  | Performs an object reference's cleanup process                                                                   |
-|  `defer`   | Execute code right before the function's return. See [defer & errdefer](#defer--errdefer)                        |
-| `errdefer` | Execute code right before the function returns an error. See [defer & errdefer](#defer--errdefer)                |
-|  `unsafe`  | Execute code in unsafe/unchecked context. See [unsafe](#unsafe)                                                  |
+| Keyword    | Purpose                                                                                                                  |
+|:----------:|:-------------------------------------------------------------------------------------------------------------------------|
+| `from`     | Defines a `from ... import` statement. See [Importing modules and namespaces](#importing-modules-and-namespaces)         |
+| `let`      | Defines a variable value field                                                                                           |
+| `const`    | Defines a constant value field                                                                                           |
+| `func`     | Defines a function. See [functions](#functions)                                                                          |
+| `struct`   | Defines a structure. See [structures](#structures)                                                                       |
+| `typedef`  | Defines a typedef. See [typedefs](#typedefs)                                                                             |
+| `if`       | Defines a conditional if statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                             |
+| `elif`     | Defines a conditional elif statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                           |
+| `else`     | Defines an else statement. See [if, elif and else blocks](#if-elif-and-else-blocks)                                      |
+| `for`      | Defines a for loop statement. See [for loops](#for-loops)                                                                |
+| `while`    | Defines a while loop statement. See [while loops](#while-loops)                                                          |
+| `match`    | Defines a value matching expression. See [match](#match)                                                                 |
+| `new`      | Creates an object's instance. See [structures](#structures)                                                              |
+| `async`    | Marks a async function call as asyncronous. See [async](#async)                                                          |
+| `await`    | Marks a async function call as syncronous. See [async](#async)                                                           |
+| `label`    | Declares a label or indicates a label type. See [labels](#labels)                                                        |
+| `try`      | Makes the called function automatically throw up any error. See [errors](#errors)                                        |
+| `catch`    | Captures and handles an error returned by a function. See [errors](#errors)                                              |
+| `throw`    | Makes the function return an error. See [errors](#errors)                                                                |
+| `destroy`  | Destroys an object and performs it cleanup process                                                                       |
+| `defer`    | Execute code right before the function's return. See [defer & errdefer](#defer--errdefer)                                |
+| `errdefer` | Execute code right before the function's error return. See [defer & errdefer](#defer--errdefer)                          |
+| `unsafe`   | Execute code in an unchecked context. See [unsafe](#unsafe)                                                              |
 
+Other keyword-like tokens are not reserved, working as such only in certain contexts
 
 ---
 ### Statements and Line Breaks
@@ -72,6 +73,34 @@ Std.Console.writeln("This string"
 Std.Console.writeln("This string" + " is being used to break this line!")
 ```
 
+Parenthesis and [collections](#collections) can also be used to break line
+
+Declarations can also be separated in multiple lines within the rule that a keyword must
+aways start a line
+
+```tq
+# Behaves as expected
+from Std.Console import { write }
+
+# Behaves as expected
+from Std.Console
+import { write }
+
+from
+Std.Console import # That is not part of the statement
+{ write } # That is not part of the statement
+
+from Std.Console
+import
+{ write } # That is not part of the statement
+
+# Behaves as expected
+return result
+
+return
+	result # That is not part of the statement
+```
+
 It is also possible to write two or more statements in the same line using a semicolon (`;`) character.
 It will emulate a line break when interpreted. e.g:
 
@@ -79,6 +108,8 @@ It will emulate a line break when interpreted. e.g:
 #/// func scope ///
 write("Hello, "); write("World!"); write("\n")
 ```
+
+
 
 ---
 ### Expressions
@@ -349,10 +380,10 @@ by a number that defines the bit width of the type.
 
 Examples of valid integer types are:
 ```pseudo
-i8    # signed 8-bit (1 byte) integer
-u16   # unsigned 16-bit (2 bytes) integer
-i128  # signed 128-bit (16 bytes) integer
-u256  # unsigned 256-bit (32 bytes) integer
+i8    # signed 8-bit integer
+u16   # unsigned 16-bit integer
+i128  # signed 128-bit integer
+u256  # unsigned 256-bit integer
 i1    # signed single-bit integer (-1 or 0)
 ```
 
@@ -366,24 +397,26 @@ alignment. \
 More about this will be covered in [alignment](/docs/language/language_reference#data-alignment).
 :::
 
-The following non-exaustive table shows some common integer types and
+The following non-exhaustive table shows some common integer types and
 its corresponding type in the C programming language:
 
-| Alias  | Equivalent in C |         Size          |              Range              |
-| ------ | :-------------: | :-------------------: | :-----------------------------: |
-| `i8`   |    `int8_t`     |        8-bits         |           -128 to 127           |
-| `i16`  |    `int16_t`    |        16-bits        |        -32,768 to 32,767        |
-| `i32`  |    `int32_t`    |        32-bits        | -2,147,483,648 to 2,147,483,647 |
-| `i64`  |    `int64_t`    |        64-bits        |      -9.2x10¹⁸ to 9.2x10¹⁸      |
-| `int`  |    `size_t`     |  (target word size)   |       (target word range)       |
-| `iptr` |   `intptr_t`    | (target pointer size) |     (target pointer range)      |
-| `u8`   |    `uint8_t`    |        8-bits         |            0 to 255             |
-| `u16`  |   `uint16_t`    |        16-bits        |           0 to 65,535           |
-| `u32`  |   `uint32_t`    |        32-bits        |       0 to 4,294,967,295        |
-| `u64`  |   `uint64_t`    |        64-bits        |          0 to 1.8x10¹⁹          |
-| `uint` |    `usize_t`    |  (target word size)   |       (target word range)       |
-| `uptr` |   `uintptr_t`   | (target pointer size) |     (target pointer range)      |
-| `byte` |     `char`      |  (target byte size)   |       (target byte range)       |
+| Alias          | Equivalent in C | Size                  | Range                           |
+|----------------|:---------------:|:---------------------:|:-------------------------------:|
+| `i8`           | `int8_t`        | 8-bits                | -128 to 127                     |
+| `i16`          | `int16_t`       | 16-bits               | -32,768 to 32,767               |
+| `i32`          | `int32_t`       | 32-bits               | -2,147,483,648 to 2,147,483,647 |
+| `i64`          | `int64_t`       | 64-bits               | -9.2x10¹⁸ to 9.2x10¹⁸           |
+| `int`          | `size_t`*       | (target word size)    | (target word range)             |
+| `iptr`         | `intptr_t`      | (target pointer size) | (target pointer range)          |
+| `u8`           | `uint8_t`       | 8-bits                | 0 to 255                        |
+| `u16`          | `uint16_t`      | 16-bits               | 0 to 65,535                     |
+| `u32`          | `uint32_t`      | 32-bits               | 0 to 4,294,967,295              |
+| `u64`          | `uint64_t`      | 64-bits               | 0 to 1.8x10¹⁹                   |
+| `uint`         | `usize_t`*      | (target word size)    | (target word range)             |
+| `uptr`         | `uintptr_t`     | (target pointer size) | (target pointer range)          |
+| `byte`         | `char`          | (target byte size)    | (target byte range)             |
+
+(* - Platform-dependent alias)
 
 The `int`, `uint`, `iptr`, `uptr` and `byte` types are special integers that are defined
 by the target. `byte` is the [byte size](https://en.wikipedia.org/wiki/Byte) of the machine.
@@ -413,9 +446,10 @@ If compiling the project to thr AVR architecture based machine: \
 ### Floating-point
 
 FP(floating-point) numbers are somewhat complicated numerical values used to reproduce fractions.
-All the standard FP numbers are implemented following the [`IEEE 754`](https://en.wikipedia.org/wiki/IEEE_754) standard.
+All the standard FP numbers are implemented following the [`IEEE 754`](https://en.wikipedia.org/wiki/IEEE_754)
+standard by default.
 
-Here is the exaustive list of floating-point numeric types with their
+Here is the exhaustive list of floating-point numeric types with their
 corresponding type in the C programming language:
 
 | Alias  | Equivalent in C |
@@ -424,7 +458,7 @@ corresponding type in the C programming language:
 | `f32`  |     `float`     |
 | `f64`  |    `double`     |
 | `f80`  |  `long double`  |
-| `f128` |   `_Float128`   |
+| `f128` |  `_Float128`    |
 
 ---
 ### Boolean
@@ -463,7 +497,7 @@ string    # variable size (can be heap or statically allocated)
 let mySpeek = "Hello, World!"
 Std.Console.writeln(mySpeek)
 
-mySpeek = "Goodbie, World!"
+mySpeek = "Goodbye, World!"
 Std.Console.writeln(mySpeek)
 ```
 ```text title="Console Output"
@@ -537,17 +571,17 @@ To iterate though a range, get an instance of the range iterator:
 from Std.Console import
 
 const myRange = 0 .. 20 : 2
-var iterator = myRange.iterator()
+let iterator = myRange.iterator()
 
-var uint i
-while (iterator.reachEnd() : i = iterator.next()) {
+let uint i
+while (iterator.reachEnd()) : (i = iterator.next()) {
     writeln(i)
 }
 ```
 or using a for-loop:
 ```tq
 #/// func scope ///
-var uint i
+let uint i
 for i in iterator {
     writeln(i)
 }
@@ -874,7 +908,7 @@ let myBio = new Biography() {
 ```
 
 
-To make life easyer, the language allows to declarate a special function that will be called automatically
+To make life easyer, the language allows to declare a special function that will be called automatically
 when the structure is initialized, called constructor. The constructor can accept parameters, read and set
 variables and run code as any function can do.
 
@@ -1011,7 +1045,7 @@ struct Biography {
     ---
     ##### Manually Modifying Memory Layout
 
-    Sometimes, is necessary to declarate exactly how the memory is organized inside a package.
+    Sometimes, is necessary to declare exactly how the memory is organized inside a package.
     For this, the standard library defines with the `@packed` attribute, the attributes `@off`,
     `@lay` and `@pad` (abreviations for offset, layout and padding, respectivelly).
 
@@ -1154,12 +1188,12 @@ This allows different struct implementations to be used interchangeably.
 :::under-construction
 :::
 
-Type definitions, or typedefs, are a powerfull way to declarate primitive-like types
+Type definitions, or typedefs, are a powerfull way to declare primitive-like types
 with custom rules and behavior.
 
 #### Declarting Typedefs
 
-To declarate a typedef, you can do:
+To declare a typedef, you can do:
 ```tq
 typedef MyCustomType {
 	# Here you can define value
@@ -1167,7 +1201,7 @@ typedef MyCustomType {
 }
 ```
 
-To declarate the typedef with a specific undercovered type, use the following:
+To declare the typedef with a specific undercovered type, use the following:
 
 ```tq
 typedef(MyType) MyCustomType {
@@ -1290,7 +1324,7 @@ a variety of security features to prevent errors when acessing null values.
 ---
 #### The nullable wrapper
 
-It is possible to declarate nullable types wrapping them with the nullable generic type.
+It is possible to declare nullable types wrapping them with the nullable generic type.
 This wrapping can be made putting the interrogation (`?`) character right before the desired type.
 ```tq
 #/// func scope ///
@@ -1556,7 +1590,7 @@ Hello, World!
 foo finished!
 ```
 
-the syntax for declarate a function is:
+the syntax for declare a function is:
 ```pseudo
 func <name>(<argument type> <argument name>, <...>) <optional type> { <code to execute> }
 ```
@@ -1582,7 +1616,7 @@ type and allow them to be refered inside the function block.
 ```tq
 # the function `foo` will ask for 2 arguments to be invoked.
 # - The first can be a value of any type that will be refered as `any`.
-# - The seccond is a 32 bit integer that will be refered as `number`.
+# - The second is a 32 bit integer that will be refered as `number`.
 func foo(anytype any, i32 number) void { ... }
 ```
 
@@ -1675,7 +1709,7 @@ condition after another until one of them is true or the cascade ends.
 The condition expression evaluated after the `if` and `elif` keywords needs to be or result in
 a `Boolean` type.
 
-If false, the code will jump the next declarated statement and continue the process in the seccond statement
+If false, the code will jump the next declarated statement and continue the process in the second statement
 after the condition.
 
 ```tq
@@ -1686,10 +1720,10 @@ if sayHello
 	Std.Console.writeln("Hello, World!")
 
 # This statement is outside the condition!
-Std.Console.writeln("Goodbie, World!")
+Std.Console.writeln("Goodbye, World!")
 ```
 ```text title="Console Output"
-Goodbie, World!
+Goodbye, World!
 ```
 
 When an `elif` statement is declarated after a `if` or `elif`, the condition will be
@@ -2017,7 +2051,7 @@ project into small blocks and provide an aditional layer of safety when it comes
 naming conflicts.
 
 A namespace represents a logical group of individual identifiers, organized in a
-hieraquical order. Identifiers inside namespaces can be refered relatively to a scope
+hierarchical order. Identifiers inside namespaces can be refered relatively to a scope
 or globally, with fully-qualified identifiers.
 
 imagine the following namespace organization:
@@ -2180,7 +2214,7 @@ These attributes modifies how functions are handled by the compiler.
 | `@noInline`                        | Functions    | Force a function to be not inlined during optimization |
 | `@comptime`                        | Functions    | Force a function to be executed during compilation |
 | `@runtime`                         | Functions    | Force a function to be executed only during runtime |
-| `@callConv(Std.Compilation.Abi)`   | Functions    | Declarate the convention used for the calling on binary targets that support different ABIs |
+| `@callConv(Std.Compilation.Abi)`   | Functions    | declare the convention used for the calling on binary targets that support different ABIs |
 
 #### Overloading attributes
 
@@ -2711,22 +2745,11 @@ other tasks meanwhile the current one is busy or waiting.
 :::
 
 Abstractions are made to make the programmer's life easier, symplifying
-repedititve or system-dependent tasks.
+repetitive or system-dependent tasks.
 
 Sometimes however, it is mandatory to communicate directly with the system.
 Embedded and bare-metal development, system programming and better memory
 managing are just some examples of why this access is needed.
-
----
-### Acessing CPU Registers
-
-:::not-implemented
-:::
-
-When compiled to some CPUs, the program binary has access to a set of CPU
-Registers that are used to do operations or controll the CPU behavior.
-
-// TODO
 
 ---
 ### Inline Assembly
@@ -2754,22 +2777,14 @@ func foo() {
 	# entire assembly code in a tiny scope,
 	# allowing that code to be emitted as
 	# is and do not receive any optimizations.
-	new AssemblyContext(.x86_64)
+	new AssemblyContext(.x86_64) {
+		# The first argument must go in the RDI register
+		# the mov instruction follows the order 'to <- from'
+		MOV(.rdi, &message)
 
-	# The context return an instance that contains
-	# diverse methods to write the assembly code.
-	# See the example:
-
-	# The first argument must go in the RDI register
-	# the mov instruction follows the order 'to <- from'
-	.MOV(.rdi, &message)
-
-	# Then we can make a call to the function
-	.CALL(writeln)
-
-	# `.execute()` must be called to the
-	# code to take effect.
-	.execute()
+		# Then we can make a call to the function
+		CALL(writeln)
+	}
 
 	#This is equivalent to
 	###
@@ -2789,14 +2804,12 @@ func foo() {
 	let string message = "Hello, World!"
 
 	# Writing to STDOUT in x86_64 linux
-	new AssemblyContext(.x86_64)
-
-	.MOV(.rax, 1)           # syscall = write
-	.MOV(.rdi, 1)           # descriptor = stdout
-	.MOV(.rsi, &message)    # message reference
-	.MOV(.rdx, message.len) # message length
-	.SYSCALL()
-
-	.execute()
+	new AssemblyContext(.x86_64) {
+		MOV(.rax, 1)           # syscall = write
+		MOV(.rdi, 1)           # descriptor = stdout
+		MOV(.rsi, &message)    # message reference
+		MOV(.rdx, message.len) # message length
+		SYSCALL()
+	}
 }
 ```
