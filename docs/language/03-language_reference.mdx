@@ -1298,7 +1298,7 @@ func doOrder(string order) !void {
 		     "choco milk"       => .chocolate_milk
 		case "cola"             => .cola
 
-		default => throw error.UnrecognizedInput()
+		default => throw Std.Error.UnrecognizedInput()
 	}
 
 }
@@ -1974,61 +1974,6 @@ func ... {
 
 The language provides a special syntatic and semantic feature called Labels.
 // TODO
-
-```tq
-#/// func scope ///
-goto skip
-Std.Console.writeln("Line skipped!")
-
-label skip:
-Std.Console.writeln("Executing here")
-```
-
-`goto` statements can be used to manually perform loops
-
-```tq
-#/// func scope ///
-let i = 0
-
-# Implementation of a `do...while` loop
-
-label body:
-{
-	Std.Console.writeln(i)
-	i++
-}
-label check:
-{
-	if (i < 50) unsafe goto body
-}
-```
-
-or manually perform conditional branching
-
-```tq
-#/// func scope ///
-
-if (choise == 'A') unsafe goto if_option_a
-else unsafe goto if_option_b
-
-label if_option_a:
-{
-	Std.Console.writeln("Option A")
-	unsafe goto end
-}
-label if_option_b:
-{
-	Std.Console.writeln("Option B")
-}
-label end:
-
-Std.Console.writeln("End of condition")
-```
-
-:::warning
-Those examples are not real use cases and must not be replicated in real code.
-Aways prefer the language's built in statements when possible
-:::
 
 ---
 ## Unsafe
